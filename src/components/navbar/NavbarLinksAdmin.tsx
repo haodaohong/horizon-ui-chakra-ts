@@ -84,9 +84,9 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 			</Flex>
 			<SidebarResponsive routes={routes} />
 			<Menu>
-				<MenuButton p='0px'>
+				{/* <MenuButton p='0px'>
 					<Icon mt='6px' as={MdNotificationsNone} color={navbarIcon} w='18px' h='18px' me='10px' />
-				</MenuButton>
+				</MenuButton> */}
 				<MenuList
 					boxShadow={shadow}
 					p='20px'
@@ -117,9 +117,9 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 			</Menu>
 
 			<Menu>
-				<MenuButton p='0px'>
+				{/* <MenuButton p='0px'>
 					<Icon mt='6px' as={MdInfoOutline} color={navbarIcon} w='18px' h='18px' me='10px' />
-				</MenuButton>
+				</MenuButton> */}
 				<MenuList
 					boxShadow={shadow}
 					p='20px'
@@ -198,7 +198,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							fontSize='sm'
 							fontWeight='700'
 							color={textColor}>
-							👋&nbsp; Hey, Adela
+							👋&nbsp; Hey, WorkMan
 						</Text>
 					</Flex>
 					<Flex flexDirection='column' p='10px'>
