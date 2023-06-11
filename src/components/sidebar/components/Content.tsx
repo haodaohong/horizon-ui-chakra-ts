@@ -17,10 +17,10 @@ function SidebarContent(props: { routes: RoutesType[] }) {
 
 			<Stack direction='column' mt='8px' mb='auto'>
 				
-				<Box ps='0px' pe={{ lg: '16px', '2xl': '16px' }}>
+				<Box alignItems={"center"} alignContent={"center"} ps='0px' pe={{ lg: '16px', '2xl': '16px' }}>
 					{/* <Links routes={routes} /> */}
-					<Text alignContent={"center"} fontWeight='bold' fontSize='2xl' mt='10px' mb='4px'>
-						All stories
+					<Text style={{textAlign: "center"}} alignItems={"middle"} alignContent={"center"} fontWeight='bold' fontSize='2xl' mt='10px' mb='4px'>
+						User Stories
 					</Text>
 					<Stories></Stories>
 				</Box>

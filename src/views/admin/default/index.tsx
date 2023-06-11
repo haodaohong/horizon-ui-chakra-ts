@@ -42,17 +42,71 @@ import CreateUserStory from './components/CreateUserStory';
 import UserStoryResult from './components/UserStoryResult';
 import UserTestCaseResult from './components/UserTestCaseResult';
 import UserTaskResult from './components/UserTaskResult';
+import React from 'react';
+import { generateUserStory } from 'services';
 
 export default function UserReports() {
 	// Chakra Color Mode
 	const brandColor = useColorModeValue('brand.500', 'white');
 	const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
+
+		async function OnGenerateUserStory(){
+			const endpoint = 'https://ai.api.1app.site/api/A_AIUserStory/Generate';
+			const bodyRequest = {
+				"who": "admin",
+				"whatToDo": "login the web admin portal",
+				"whyToDo": "need to view the list data",
+				"acceptance": "can login"
+			  };
+
+			const controller = new AbortController();
+			const response = await fetch(endpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				...({
+					Authorization: `Bearer WM5ABA9E202D94C43ASW3CA6600F2BF77FWM`
+				})
+			},
+			signal: controller.signal,
+			body: JSON.stringify(bodyRequest),
+			});
+			if (!response.ok) {
+				console.error(response.statusText);
+				return;
+			}
+			const data = response.body;
+			if (!data) {
+				console.error(response.statusText);
+				return;
+			}
+			const reader = data.getReader();
+			const decoder = new TextDecoder();
+			let done = false;
+			let isFirst = true;
+			let text = '';
+			while (!done) {
+			//   if (stopConversationRef.current === true) {
+			// 	controller.abort();
+			// 	done = true;
+			// 	break;
+			//   }
+			  const { value, done: doneReading } = await reader.read();
+			  done = doneReading;
+			  const chunkValue = decoder.decode(value);
+			  text += chunkValue;
+			  console.log(text);
+			  }
+			}
+
+
+
 	return (
 		<Box pt={{ base: '130px', md: '80px', xl: '80px' }}>
 			
 
 			<SimpleGrid height={'100%'} columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-				<CreateUserStory />
+				<CreateUserStory onGenerate={OnGenerateUserStory} />
 				<UserStoryResult />
 				<UserTaskResult />
 				<UserTestCaseResult />

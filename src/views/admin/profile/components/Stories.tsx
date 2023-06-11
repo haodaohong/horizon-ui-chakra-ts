@@ -8,6 +8,7 @@ import Project3 from 'assets/img/profile/Project3.png';
 // Custom components
 import Card from 'components/card/Card';
 import Story from 'views/admin/profile/components/Story';
+import { getAllUserStories } from 'services';
 
 export default function Projects(props: { [x: string]: any }) {
 	const { ...rest } = props;
@@ -17,6 +18,14 @@ export default function Projects(props: { [x: string]: any }) {
 	  const handleResize = () => {
 		setHeight(window.innerHeight - 120);
 	  };
+
+	  getAllUserStories().then(e=>{
+		console.log('getAllUserStories',e);
+
+	  }).catch(e=>{
+		console.error('getAllUserStories error:',e);
+	  });
+
   
 	  window.addEventListener("resize", handleResize);
 	  return () => {
