@@ -14,10 +14,15 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 	const { ...rest } = props;
 
 	// Chakra Color Mode
-	const [input, setInput] = useState('')
-	const handleInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setInput(e.target.value)
+	const [who, setWho] = useState('')
+	const [whatToDo, setWhatToDo] = useState('')
+	const [whyToDo, setWhyToDo] = useState('')
+	const [acceptance, setAcceptance] = useState('')
+	const handleWhoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWho(e.target.value)
+	const handleWhatToDoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWhatToDo(e.target.value)
+	const handleWhyToDoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWhyToDo(e.target.value)
+	const handleAcceptanceInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setAcceptance(e.target.value)
 
-	const isError = input === '';
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const textColorSecondary = useColorModeValue('secondaryGray.600', 'white');
 	const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
@@ -33,14 +38,14 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 			<Flex w='100%' flexDirection={{ base: 'column', lg: 'row' }}>
 				<FormControl>
 					<FormLabel>目标用户是谁？</FormLabel>
-					<Input marginBottom={'5'} type='email' value={input} onChange={handleInputChange} />
+					<Input marginBottom={'5'}  value={who} onChange={handleWhoInputChange} colorScheme='facebook'/>
 					<FormLabel>目标用户想做什么功能？</FormLabel>
-					<Input marginBottom={'5'} type='email' value={input} onChange={handleInputChange} />
+					<Input marginBottom={'5'}  value={whatToDo} onChange={handleWhatToDoInputChange} />
 					<FormLabel>用户为什么需要这些功能？</FormLabel>
-					<Input marginBottom={'5'} type='email' value={input} onChange={handleInputChange} />
+					<Input marginBottom={'5'}  value={whyToDo} onChange={handleWhyToDoInputChange} />
 					<FormLabel>验收标准有哪些？</FormLabel>
-					<Input marginBottom={'5'} type='email' value={input} onChange={handleInputChange} />
-					<Button marginTop={'3'} colorScheme='facebook'>🪄 立即生成</Button>
+					<Input marginBottom={'5'}  value={acceptance} onChange={handleAcceptanceInputChange} />
+					<Button onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance);}} marginTop={'3'} colorScheme='facebook'>🪄 立即生成</Button>
 				</FormControl>
 			</Flex>
 		</Card>

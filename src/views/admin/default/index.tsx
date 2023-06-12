@@ -1,24 +1,3 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2022 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 
 // Chakra imports
 import { Avatar, Box, Flex, FormLabel, Icon, Select, SimpleGrid, useColorModeValue } from '@chakra-ui/react';
@@ -42,21 +21,22 @@ import CreateUserStory from './components/CreateUserStory';
 import UserStoryResult from './components/UserStoryResult';
 import UserTestCaseResult from './components/UserTestCaseResult';
 import UserTaskResult from './components/UserTaskResult';
-import React from 'react';
+import React, { useState } from 'react';
 import { generateUserStory } from 'services';
 
 export default function UserReports() {
 	// Chakra Color Mode
 	const brandColor = useColorModeValue('brand.500', 'white');
 	const boxBg = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
+	const [result, setResult] = useState('')
 
-		async function OnGenerateUserStory(){
+		async function OnGenerateUserStory(who:string,whatToDo:string,whyToDo:string,acceptance:string){
 			const endpoint = 'https://ai.api.1app.site/api/A_AIUserStory/Generate';
 			const bodyRequest = {
-				"who": "admin",
-				"whatToDo": "login the web admin portal",
-				"whyToDo": "need to view the list data",
-				"acceptance": "can login"
+				"who": who,
+				"whatToDo": whatToDo,
+				"whyToDo": whyToDo,
+				"acceptance": acceptance
 			  };
 
 			const controller = new AbortController();
@@ -83,7 +63,6 @@ export default function UserReports() {
 			const reader = data.getReader();
 			const decoder = new TextDecoder();
 			let done = false;
-			let isFirst = true;
 			let text = '';
 			while (!done) {
 			//   if (stopConversationRef.current === true) {
@@ -95,7 +74,7 @@ export default function UserReports() {
 			  done = doneReading;
 			  const chunkValue = decoder.decode(value);
 			  text += chunkValue;
-			  console.log(text);
+			  setResult(text);
 			  }
 			}
 
@@ -106,8 +85,8 @@ export default function UserReports() {
 			
 
 			<SimpleGrid height={'100%'} columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-				<CreateUserStory onGenerate={OnGenerateUserStory} />
-				<UserStoryResult />
+				<CreateUserStory Generate={OnGenerateUserStory} />
+				<UserStoryResult Result={result} />
 				<UserTaskResult />
 				<UserTestCaseResult />
 				

@@ -9,6 +9,7 @@ import { MdBarChart, MdOutlineCalendarToday } from 'react-icons/md';
 // Assets
 import { RiArrowUpSFill } from 'react-icons/ri';
 import { lineChartDataTotalSpent, lineChartOptionsTotalSpent } from 'variables/charts';
+import { createUserStory } from 'services';
 
 export default function UserTaskResult(props: { [x: string]: any }) {
 	const { ...rest } = props;
@@ -25,6 +26,9 @@ export default function UserTaskResult(props: { [x: string]: any }) {
 	const bgButton = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
 	const bgHover = useColorModeValue({ bg: 'secondaryGray.400' }, { bg: 'whiteAlpha.50' });
 	const bgFocus = useColorModeValue({ bg: 'secondaryGray.300' }, { bg: 'whiteAlpha.100' });
+
+
+	
 	return (
 		<Card w='100%' mb='0px' {...rest}>
 			<Flex  align='center' justify='space-between' w='100%' pe='20px' pt='5px'>

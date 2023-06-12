@@ -48,17 +48,17 @@ export const getAllUserStories = async () => {
     }
 };
 
-export const createUserStory = async () => {
+export const createUserStory = async (data:string) => {
   try {
-      return await api.get<UserStory[]>('/A_AIUserStory/Create');
+      return await api.post<UserStory>('/A_AIUserStory/Create',data);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 };
 
-export const updateUserStory = async () => {
+export const updateUserStory = async (storyId:string,data:string) => {
   try {
-      return await api.get<UserStory[]>('/A_AIUserStory/Update');
+      return await api.post<UserStory>('/A_AIUserStory/Update?storyId='+storyId,data);
   } catch (error) {
     console.error('Error create data:', error);
   }

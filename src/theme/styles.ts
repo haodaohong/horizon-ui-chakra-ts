@@ -87,7 +87,7 @@ export const globalStyles = {
 				letterSpacing: '-0.5px'
 			},
 			input: {
-				color: 'gray.700'
+				color: 'white.700'
 			},
 			html: {
 				fontFamily: 'DM Sans'
