@@ -33,7 +33,7 @@ export default function UserStoryResult(props: { [Result: string]: any }) {
 
 	const save = () => {
 		setDisable(true);
-		setBtnText('正在保持，请稍候...');
+		setBtnText('正在保存，请稍候...');
 		createUserStory(resultText).then(e=>{console.log('save',resultText);}).catch(e=>{console.log('err',resultText)}).finally(()=>{
 			setDisable(false);
 			setBtnText('立即保存');
@@ -52,6 +52,6 @@ export default function UserStoryResult(props: { [Result: string]: any }) {
 				</FormControl>
 			</Flex>
 		</Card>
-	
+
 	);
 }

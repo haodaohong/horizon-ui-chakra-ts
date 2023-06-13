@@ -10,95 +10,52 @@ import Card from 'components/card/Card';
 import Story from 'views/admin/profile/components/Story';
 import { getAllUserStories } from 'services';
 
+import { UserStory } from 'services';
+
 export default function Projects(props: { [x: string]: any }) {
+
 	const { ...rest } = props;
 	const [height, setHeight] = React.useState(window.innerHeight);
+	const [stories, setStories] = React.useState<UserStory[]>([]);
 
 	React.useEffect(() => {
 	  const handleResize = () => {
 		setHeight(window.innerHeight - 120);
 	  };
 
-	  getAllUserStories().then(e=>{
-		console.log('getAllUserStories',e);
+		getAllUserStories().then(e => {
+			setStories(e.data)
+			console.log('getAllUserStories', e);
 
 	  }).catch(e=>{
 		console.error('getAllUserStories error:',e);
 	  });
 
-  
+
 	  window.addEventListener("resize", handleResize);
 	  return () => {
 		window.removeEventListener("resize", handleResize);
 	  };
 	  handleResize();
 	}, []);
-  
+
 	// Chakra Color Mode
 	const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
 	const textColorSecondary = 'gray.400';
 	const cardShadow = useColorModeValue('0px 18px 40px rgba(112, 144, 176, 0.12)', 'unset');
 	return (
 		<Card overflowY={'auto'} w={'100%'} height={`${height}px`} mb={{ base: '0px', '2xl': '20px' }} {...rest}>
-
-			<Story
-				boxShadow={cardShadow}
-				mb='20px'
-				image={Project1}
-				ranking='1'
-				link='#'
-				title='Technology behind the BlockchainTechnology behind the BlockchainTechnology behind the BlockchainTechnology behind the Blockchain'
-			/>
-			<Story
-				boxShadow={cardShadow}
-				mb='20px'
-				image={Project2}
-				ranking='2'
-				link='#'
-				title='Greatest way to a good Economy'
-			/>
-			<Story
-				boxShadow={cardShadow}
-				image={Project3}
-				ranking='3'
-				link='#'
-				title='Most essential tips for Burnout'
-			/>
-			<Story
-				boxShadow={cardShadow}
-				image={Project3}
-				ranking='3'
-				link='#'
-				title='Most essential tips for Burnout'
-			/>
-			{/* <Story
-				boxShadow={cardShadow}
-				image={Project3}
-				ranking='3'
-				link='#'
-				title='Most essential tips for Burnout'
-			/>
-			<Story
-				boxShadow={cardShadow}
-				image={Project3}
-				ranking='3'
-				link='#'
-				title='Most essential tips for Burnout'
-			/>
-			<Story
-				boxShadow={cardShadow}
-				image={Project3}
-				ranking='3'
-				link='#'
-				title='Most essential tips for Burnout'
-			/>
-			<Story
-				boxShadow={cardShadow}
-				image={Project3}
-				ranking='3'
-				link='#'
-				title='Most essential tips for LAST ONE!'
-			/> */}
+			{
+				stories?.map(story => (
+				<Story
+					boxShadow={cardShadow}
+					mb='20px'
+					image={Project1}
+					ranking='1'
+					link='#'
+					title={story.id + '. ' + story.name}
+				/>))
+			}
 		</Card>
 	);
 }

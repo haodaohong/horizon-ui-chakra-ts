@@ -13,7 +13,7 @@ interface A_AIUserTask {
     isDelete: boolean;
     documentId?: string | null;
   }
-  
+
   interface A_AITestCase {
     id: number;
     name?: string | null;
@@ -25,8 +25,8 @@ interface A_AIUserTask {
     userStoryId: number;
     documentId?: string | null;
   }
-  
-  interface UserStory {
+
+export  interface UserStory {
     id: number;
     name?: string | null;
     description?: string | null;
