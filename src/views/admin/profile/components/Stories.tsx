@@ -12,6 +12,8 @@ import { getAllUserStories } from 'services';
 
 import { UserStory } from 'services';
 
+import { subscribe } from "event";
+
 export default function Stories(props: { [x: string]: any }) {
 
 	const { ...rest } = props;
@@ -19,24 +21,32 @@ export default function Stories(props: { [x: string]: any }) {
 	const [stories, setStories] = React.useState<UserStory[]>([]);
 
 	React.useEffect(() => {
-	  const handleResize = () => {
-		setHeight(window.innerHeight - 120);
-	  };
+		const handleResize = () => {
+			setHeight(window.innerHeight - 120);
+		};
+
+		subscribe("storySaved", () => getAllUserStories().then(e => {
+			setStories(e.data)
+			console.log('getAllUserStories', e);
+
+		}).catch(e => {
+			console.error('getAllUserStories error:', e);
+		}));
 
 		getAllUserStories().then(e => {
 			setStories(e.data)
 			console.log('getAllUserStories', e);
 
-	  }).catch(e=>{
-		console.error('getAllUserStories error:',e);
-	  });
+		}).catch(e => {
+			console.error('getAllUserStories error:', e);
+		});
 
-	  handleResize();
+		handleResize();
 
-	  window.addEventListener("resize", handleResize);
-	  return () => {
-		window.removeEventListener("resize", handleResize);
-	  };
+		window.addEventListener("resize", handleResize);
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
 	}, []);
 
 	// Chakra Color Mode
@@ -47,14 +57,14 @@ export default function Stories(props: { [x: string]: any }) {
 		<Card overflowY={'auto'} w={'100%'} height={`${height}px`} mb={{ base: '0px', '2xl': '20px' }} {...rest}>
 			{
 				stories?.map(story => (
-				<Story
-					boxShadow={cardShadow}
-					mb='20px'
-					image={Project1}
-					ranking='1'
-					link='#'
-					title={story.id + '. ' + story.name}
-				/>))
+					<Story
+						boxShadow={cardShadow}
+						mb='20px'
+						image={Project1}
+						ranking='1'
+						link='#'
+						title={story.id + '. ' + story.name}
+					/>))
 			}
 		</Card>
 	);

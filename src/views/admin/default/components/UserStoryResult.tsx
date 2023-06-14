@@ -25,6 +25,9 @@ import LineChart from "components/charts/LineChart";
 import { SetStateAction, useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
+
+import { publish } from "event"
+
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
 import {
@@ -36,7 +39,7 @@ interface UserStoryResultProps {
   Result: string;
   OnStoryId: any;
 }
-const UserStoryResult: React.FC<UserStoryResultProps> = (props)=>{
+const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
   const { ...rest } = props;
   const { OnStoryId, Result } = props;
   // Chakra Color Mode
@@ -73,12 +76,13 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props)=>{
   const save = () => {
     setDisable(true);
     setBtnText("正在保存，请稍候...");
-    console.log('resultText',resultText);
-    if(resultText){
+    console.log('resultText', resultText);
+    if (resultText) {
       createUserStory(resultText)
         .then((response) => {
-        setStoryId(response.data.id);
-        OnStoryId(response.data.id)
+          publish('storySaved');
+          setStoryId(response.data.id);
+          OnStoryId(response.data.id)
           console.log("save", resultText);
         })
         .catch((e) => {
