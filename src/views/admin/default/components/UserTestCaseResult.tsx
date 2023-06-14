@@ -63,7 +63,7 @@ export default function UserTestCaseResult(props: any) {
   };
 
   const OnGenerateTestCase = async (payload: any) => {
-    const endpoint = `https://ai.api.1app.siteapi/A_AITestCase/Create`;
+    const endpoint = `https://ai.api.1app.site/api/A_AITestCase/Create`;
     const controller = new AbortController();
     const response = await fetch(endpoint, {
       method: "POST",
