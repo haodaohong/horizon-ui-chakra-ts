@@ -12,7 +12,7 @@ import { getAllUserStories } from 'services';
 
 import { UserStory } from 'services';
 
-export default function Projects(props: { [x: string]: any }) {
+export default function Stories(props: { [x: string]: any }) {
 
 	const { ...rest } = props;
 	const [height, setHeight] = React.useState(window.innerHeight);
@@ -31,12 +31,12 @@ export default function Projects(props: { [x: string]: any }) {
 		console.error('getAllUserStories error:',e);
 	  });
 
+	  handleResize();
 
 	  window.addEventListener("resize", handleResize);
 	  return () => {
 		window.removeEventListener("resize", handleResize);
 	  };
-	  handleResize();
 	}, []);
 
 	// Chakra Color Mode

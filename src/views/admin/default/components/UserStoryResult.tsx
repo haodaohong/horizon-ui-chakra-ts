@@ -22,7 +22,7 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import LineChart from "components/charts/LineChart";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
@@ -32,8 +32,11 @@ import {
   lineChartOptionsTotalSpent,
 } from "variables/charts";
 import { createUserStory } from "services";
-
-export default function UserStoryResult(props: any) {
+interface UserStoryResultProps {
+  Result: string;
+  OnStoryId: any;
+}
+const UserStoryResult: React.FC<UserStoryResultProps> = (props)=>{
   const { ...rest } = props;
   const { OnStoryId, Result } = props;
   // Chakra Color Mode
@@ -41,7 +44,10 @@ export default function UserStoryResult(props: any) {
   const [btnText, setBtnText] = useState("立即保存");
   const [input, setInput] = useState("");
   const [storyId, setStoryId] = useState(0);
-
+  const [resultText, setResultText] = useState(props.Result);
+  useEffect(() => {
+    setResultText(props.Result);
+  }, [props.Result]);
   const handleInputChange = (e: {
     target: { value: SetStateAction<string> };
   }) => setInput(e.target.value);
@@ -60,7 +66,6 @@ export default function UserStoryResult(props: any) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
-  const [resultText, setResultText] = useState(Result);
   const handleResultInputChange = (e: {
     target: { value: SetStateAction<string> };
   }) => setResultText(e.target.value);
@@ -68,26 +73,22 @@ export default function UserStoryResult(props: any) {
   const save = () => {
     setDisable(true);
     setBtnText("正在保存，请稍候...");
-    let content = "";
-    if (resultText) {
-      content = resultText;
-    } else {
-      content = props.Result;
-    }
-
-    createUserStory(content)
-      .then((response) => {
+    console.log('resultText',resultText);
+    if(resultText){
+      createUserStory(resultText)
+        .then((response) => {
         setStoryId(response.data.id);
-        OnStoryId(response.data.id);
-        console.log("save", content);
-      })
-      .catch((e) => {
-        console.log("err", content);
-      })
-      .finally(() => {
-        setDisable(false);
-        setBtnText("立即保存");
-      });
+        OnStoryId(response.data.id)
+          console.log("save", resultText);
+        })
+        .catch((e) => {
+          console.log("err", resultText);
+        })
+        .finally(() => {
+          setDisable(false);
+          setBtnText("立即保存");
+        });
+    }
   };
 
   return (
@@ -98,7 +99,7 @@ export default function UserStoryResult(props: any) {
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
           <Textarea
-            value={props.Result}
+            value={resultText}
             height={"350px"}
             size="lg"
             marginBottom={"3"}
@@ -118,3 +119,4 @@ export default function UserStoryResult(props: any) {
     </Card>
   );
 }
+export default UserStoryResult;
