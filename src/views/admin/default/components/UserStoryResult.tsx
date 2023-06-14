@@ -38,7 +38,7 @@ interface UserStoryResultProps {
 }
 const UserStoryResult: React.FC<UserStoryResultProps> = (props)=>{
   const { ...rest } = props;
-  const { OnStoryId, Result, selectedStory } = props;
+  const { OnStoryId, Result } = props;
   // Chakra Color Mode
   const [disable, setDisable] = useState(false);
   const [btnText, setBtnText] = useState("立即保存");

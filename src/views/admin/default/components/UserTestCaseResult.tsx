@@ -34,7 +34,7 @@ import {
 
 export default function UserTestCaseResult(props: any) {
   const { ...rest } = props;
-  const { storyId, userStoryContent, selectedStory } = props;
+  const { storyId, userStoryContent } = props;
 
   // Chakra Color Mode
   const [input, setInput] = useState("");

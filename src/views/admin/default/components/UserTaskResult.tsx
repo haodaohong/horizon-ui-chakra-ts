@@ -35,7 +35,7 @@ import { createUserStory } from "services";
 
 export default function UserTaskResult(props: any) {
   const { ...rest } = props;
-  const { storyId, userStoryContent, selectedStory} = props;
+  const { storyId, userStoryContent } = props;
 
   // Chakra Color Mode
   const [input, setInput] = useState("");

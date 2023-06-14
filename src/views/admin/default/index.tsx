@@ -139,17 +139,17 @@ export default function UserReports() {
       >
         <CreateUserStory Generate={OnGenerateUserStory} />
         {showStoryBox ? (
-          <UserStoryResult Result={result} OnStoryId={OnStorySave} selectedStory={sharedItem}/>
+          <UserStoryResult Result={result} OnStoryId={OnStorySave} />
         ) : (
           <></>
         )}
         {showTaskBox ? (
-          <UserTaskResult storyId={storyId} userStoryContent={result} selectedStory={sharedItem} />
+          <UserTaskResult storyId={storyId} userStoryContent={result} />
         ) : (
           <></>
         )}
         {showTestCaseBox ? (
-          <UserTestCaseResult storyId={storyId} userStoryContent={result} selectedStory={sharedItem} />
+          <UserTestCaseResult storyId={storyId} userStoryContent={result} />
         ) : (
           <></>
         )}
