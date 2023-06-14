@@ -2,6 +2,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   FormLabel,
   Icon,
@@ -34,8 +35,9 @@ import CreateUserStory from "./components/CreateUserStory";
 import UserStoryResult from "./components/UserStoryResult";
 import UserTestCaseResult from "./components/UserTestCaseResult";
 import UserTaskResult from "./components/UserTaskResult";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { generateUserStory } from "services";
+import { ItemContext } from "contexts/SidebarContext";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -47,6 +49,23 @@ export default function UserReports() {
   const [showStoryBox, setShowStoryBox] = useState(false);
   const [showTaskBox, setShowTaskBox] = useState(false);
   const [showTestCaseBox, setShowTestCaseBox] = useState(false);
+
+  const {sharedItem, shareItem, clearItem} = useContext(ItemContext);
+
+  useEffect(() => {
+    if(sharedItem){
+      setShowStoryBox(true);
+      setShowTaskBox(true);
+      setShowTestCaseBox(true);
+      setResult(sharedItem.description);
+    }
+    else{
+      setShowStoryBox(false);
+      setShowTaskBox(false);
+      setShowTestCaseBox(false);
+      setResult("")
+    }
+  }, [sharedItem])
 
   async function OnGenerateUserStory(
     who: string,
@@ -120,17 +139,17 @@ export default function UserReports() {
       >
         <CreateUserStory Generate={OnGenerateUserStory} />
         {showStoryBox ? (
-          <UserStoryResult Result={result} OnStoryId={OnStorySave} />
+          <UserStoryResult Result={result} OnStoryId={OnStorySave} selectedStory={sharedItem}/>
         ) : (
           <></>
         )}
         {showTaskBox ? (
-          <UserTaskResult storyId={storyId} userStoryContent={result} />
+          <UserTaskResult storyId={storyId} userStoryContent={result} selectedStory={sharedItem} />
         ) : (
           <></>
         )}
         {showTestCaseBox ? (
-          <UserTestCaseResult storyId={storyId} userStoryContent={result} />
+          <UserTestCaseResult storyId={storyId} userStoryContent={result} selectedStory={sharedItem} />
         ) : (
           <></>
         )}

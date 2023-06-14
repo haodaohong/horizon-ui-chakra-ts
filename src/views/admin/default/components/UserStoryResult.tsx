@@ -22,7 +22,7 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import LineChart from "components/charts/LineChart";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
@@ -35,7 +35,7 @@ import { createUserStory } from "services";
 
 export default function UserStoryResult(props: any) {
   const { ...rest } = props;
-  const { OnStoryId, Result } = props;
+  const { OnStoryId, Result, selectedStory } = props;
   // Chakra Color Mode
   const [disable, setDisable] = useState(false);
   const [btnText, setBtnText] = useState("立即保存");
@@ -97,6 +97,7 @@ export default function UserStoryResult(props: any) {
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
+
           <Textarea
             value={props.Result}
             height={"350px"}
@@ -105,6 +106,7 @@ export default function UserStoryResult(props: any) {
             placeholder="这里会展示生成结果..."
             onChange={handleResultInputChange}
           />
+
           <Button
             disabled={disable}
             onClick={save}

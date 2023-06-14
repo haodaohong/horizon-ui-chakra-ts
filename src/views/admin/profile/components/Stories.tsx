@@ -11,12 +11,16 @@ import Story from 'views/admin/profile/components/Story';
 import { getAllUserStories } from 'services';
 
 import { UserStory } from 'services';
+import { ItemContext } from 'contexts/SidebarContext';
 
 export default function Projects(props: { [x: string]: any }) {
 
 	const { ...rest } = props;
 	const [height, setHeight] = React.useState(window.innerHeight);
 	const [stories, setStories] = React.useState<UserStory[]>([]);
+	const [selectedStory, setSelectedStory] = React.useState<UserStory>(null);
+
+	const {sharedItem, shareItem, clearItem} = React.useContext(ItemContext);
 
 	React.useEffect(() => {
 	  const handleResize = () => {
@@ -37,8 +41,12 @@ export default function Projects(props: { [x: string]: any }) {
 		window.removeEventListener("resize", handleResize);
 	  };
 	  handleResize();
-	}, []);
-
+	}, [stories.length]);
+	const handleClick = (idx: any) => {
+		clearItem();
+		setSelectedStory({...stories[idx]});
+		shareItem({...stories[idx]});
+	}
 	// Chakra Color Mode
 	const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
 	const textColorSecondary = 'gray.400';
@@ -46,14 +54,16 @@ export default function Projects(props: { [x: string]: any }) {
 	return (
 		<Card overflowY={'auto'} w={'100%'} height={`${height}px`} mb={{ base: '0px', '2xl': '20px' }} {...rest}>
 			{
-				stories?.map(story => (
+				stories?.map((story, idx )=> (
 				<Story
+					key={idx}
 					boxShadow={cardShadow}
 					mb='20px'
 					image={Project1}
 					ranking='1'
 					link='#'
 					title={story.id + '. ' + story.name}
+					onEditClick={() => handleClick(idx)}
 				/>))
 			}
 		</Card>
