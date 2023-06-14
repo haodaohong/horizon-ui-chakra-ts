@@ -56,6 +56,53 @@ export default function UserTestCaseResult(props: any) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
+
+  const payload = {
+    description: input,
+    userStoryId: storyId,
+  };
+
+  const OnGenerateTestCase = async (payload: any) => {
+    const endpoint = `https://ai.api.1app.siteapi/A_AITestCase/Create`;
+    const controller = new AbortController();
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...{
+          Authorization: `Bearer WM5ABA9E202D94C43ASW3CA6600F2BF77FWM`,
+        },
+      },
+      signal: controller.signal,
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      console.error(response.statusText);
+      return;
+    }
+    const data = response.body;
+    if (!data) {
+      console.error(response.statusText);
+      return;
+    }
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    let text = "";
+    while (!done) {
+      //   if (stopConversationRef.current === true) {
+      // 	controller.abort();
+      // 	done = true;
+      // 	break;
+      //   }
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      text += chunkValue;
+      setInput(text);
+    }
+  };
+
   return (
     <Card w="100%" mb="0px" {...rest}>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
@@ -69,9 +116,7 @@ export default function UserTestCaseResult(props: any) {
         pe="20px"
         pt="5px"
       >
-        <Text>
-          {userStoryContent}
-        </Text>
+        <Text>{userStoryContent}</Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
         <Heading m={"3"}>Test Case 生成结果：</Heading>
@@ -84,8 +129,14 @@ export default function UserTestCaseResult(props: any) {
             marginBottom={"3"}
             placeholder="这里会展示生成结果..."
             value={input}
+            onChange={handleInputChange}
           />
-          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook">
+          <Button
+            marginTop={"3"}
+            marginLeft={"3"}
+            colorScheme="facebook"
+            onClick={() => OnGenerateTestCase(payload)}
+          >
             💾 立即保存
           </Button>
         </FormControl>

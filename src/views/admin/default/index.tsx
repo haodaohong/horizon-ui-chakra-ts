@@ -55,8 +55,8 @@ export default function UserReports() {
     acceptance: string
   ) {
     setShowStoryBox(true);
-    setShowTaskBox(true);
-    setShowTestCaseBox(true);
+    // setShowTaskBox(true);
+    // setShowTestCaseBox(true);
     const endpoint = "https://ai.api.1app.site/api/A_AIUserStory/Generate";
     const bodyRequest = {
       who: who,
@@ -106,6 +106,8 @@ export default function UserReports() {
 
   const OnStorySave = (storyId: number) => {
     setStoryId(storyId);
+    setShowTaskBox(true);
+    setShowTestCaseBox(true);
   };
 
   return (

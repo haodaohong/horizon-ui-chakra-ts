@@ -58,12 +58,51 @@ export default function UserTaskResult(props: any) {
     { bg: "whiteAlpha.100" }
   );
 
-  const [resultText, setResultText] = useState("");
-  const handleResultInputChange = (e: {
-    target: { value: SetStateAction<string> };
-  }) => setResultText(e.target.value);
+  // const [resultText, setResultText] = useState("");
+  // const handleResultInputChange = (e: {
+  //   target: { value: SetStateAction<string> };
+  // }) => setResultText(e.target.value);
 
-  const onClickGenerate = () => {};
+  const OnGenerateTasks = async (id: number) => {
+    const endpoint = `https://ai.api.1app.site/api/A_AIUserTask/Create?userStoryId=${id}`;
+    const controller = new AbortController();
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...{
+          Authorization: `Bearer WM5ABA9E202D94C43ASW3CA6600F2BF77FWM`,
+        },
+      },
+      signal: controller.signal,
+      body: null,
+    });
+    if (!response.ok) {
+      console.error(response.statusText);
+      return;
+    }
+    const data = response.body;
+    if (!data) {
+      console.error(response.statusText);
+      return;
+    }
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    let text = "";
+    while (!done) {
+      //   if (stopConversationRef.current === true) {
+      // 	controller.abort();
+      // 	done = true;
+      // 	break;
+      //   }
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      text += chunkValue;
+      setInput(text);
+    }
+  };
 
   return (
     <Card w="100%" mb="0px" {...rest}>
@@ -78,9 +117,7 @@ export default function UserTaskResult(props: any) {
         pe="20px"
         pt="5px"
       >
-        <Text >
-          {userStoryContent}
-        </Text>
+        <Text>{userStoryContent}</Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
         <Heading m={"3"}>Task 生成结果：</Heading>
@@ -93,9 +130,9 @@ export default function UserTaskResult(props: any) {
             size="lg"
             marginBottom={"3"}
             placeholder="这里会展示生成结果..."
-            onChange={handleResultInputChange}
+            onChange={handleInputChange}
           />
-          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook">
+          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTasks(storyId)}>
             💾 立即保存
           </Button>
         </FormControl>
@@ -103,44 +140,3 @@ export default function UserTaskResult(props: any) {
     </Card>
   );
 }
-
-const OnGenerateTasks = async (id: number) => {
-  const endpoint = `https://ai.api.1app.site/api/A_AIUserTask/Create?userStoryId=${id}`;
-  const controller = new AbortController();
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...{
-        Authorization: `Bearer WM5ABA9E202D94C43ASW3CA6600F2BF77FWM`,
-      },
-    },
-    signal: controller.signal,
-    body: null,
-  });
-  if (!response.ok) {
-    console.error(response.statusText);
-    return;
-  }
-  const data = response.body;
-  if (!data) {
-    console.error(response.statusText);
-    return;
-  }
-  const reader = data.getReader();
-  const decoder = new TextDecoder();
-  let done = false;
-  let text = "";
-  while (!done) {
-    //   if (stopConversationRef.current === true) {
-    // 	controller.abort();
-    // 	done = true;
-    // 	break;
-    //   }
-    const { value, done: doneReading } = await reader.read();
-    done = doneReading;
-    const chunkValue = decoder.decode(value);
-    text += chunkValue;
-    //   setTaskResult(text);
-  }
-};
