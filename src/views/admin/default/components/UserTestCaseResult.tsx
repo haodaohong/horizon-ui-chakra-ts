@@ -34,7 +34,7 @@ import {
 
 export default function UserTestCaseResult(props: any) {
   const { ...rest } = props;
-  const { storyId } = props;
+  const { storyId, userStoryContent } = props;
 
   // Chakra Color Mode
   const [input, setInput] = useState("");
@@ -70,9 +70,7 @@ export default function UserTestCaseResult(props: any) {
         pt="5px"
       >
         <Text>
-          Technology behind the BlockchainTechnology behind the
-          BlockchainTechnology behind the BlockchainTechnology behind the
-          Blockchain
+          {userStoryContent}
         </Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
@@ -85,11 +83,8 @@ export default function UserTestCaseResult(props: any) {
             size="lg"
             marginBottom={"3"}
             placeholder="这里会展示生成结果..."
-            value={storyId}
+            value={input}
           />
-          <Button marginTop={"3"} colorScheme="facebook">
-            🪄 立即生成
-          </Button>
           <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook">
             💾 立即保存
           </Button>

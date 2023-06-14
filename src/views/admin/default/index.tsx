@@ -44,12 +44,19 @@ export default function UserReports() {
   const [result, setResult] = useState("");
   const [storyId, setStoryId] = useState(0);
 
+  const [showStoryBox, setShowStoryBox] = useState(false);
+  const [showTaskBox, setShowTaskBox] = useState(false);
+  const [showTestCaseBox, setShowTestCaseBox] = useState(false);
+
   async function OnGenerateUserStory(
     who: string,
     whatToDo: string,
     whyToDo: string,
     acceptance: string
   ) {
+    setShowStoryBox(true);
+    setShowTaskBox(true);
+    setShowTestCaseBox(true);
     const endpoint = "https://ai.api.1app.site/api/A_AIUserStory/Generate";
     const bodyRequest = {
       who: who,
@@ -96,7 +103,7 @@ export default function UserReports() {
       setResult(text);
     }
   }
-  
+
   const OnStorySave = (storyId: number) => {
     setStoryId(storyId);
   };
@@ -110,9 +117,21 @@ export default function UserReports() {
         mb="20px"
       >
         <CreateUserStory Generate={OnGenerateUserStory} />
-        <UserStoryResult Result={result} OnStoryId={OnStorySave} />
-        <UserTaskResult storyId={storyId} />
-        <UserTestCaseResult storyId={storyId} />
+        {showStoryBox ? (
+          <UserStoryResult Result={result} OnStoryId={OnStorySave} />
+        ) : (
+          <></>
+        )}
+        {showTaskBox ? (
+          <UserTaskResult storyId={storyId} userStoryContent={result} />
+        ) : (
+          <></>
+        )}
+        {showTestCaseBox ? (
+          <UserTestCaseResult storyId={storyId} userStoryContent={result} />
+        ) : (
+          <></>
+        )}
       </SimpleGrid>
     </Box>
   );

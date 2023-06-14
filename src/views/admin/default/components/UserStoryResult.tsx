@@ -33,9 +33,9 @@ import {
 } from "variables/charts";
 import { createUserStory } from "services";
 
-export default function UserStoryResult(props: any ) {
+export default function UserStoryResult(props: any) {
   const { ...rest } = props;
-  const { OnStoryId } = props;
+  const { OnStoryId, Result } = props;
   // Chakra Color Mode
   const [disable, setDisable] = useState(false);
   const [btnText, setBtnText] = useState("立即保存");
@@ -60,7 +60,7 @@ export default function UserStoryResult(props: any ) {
     { bg: "secondaryGray.300" },
     { bg: "whiteAlpha.100" }
   );
-  const [resultText, setResultText] = useState("");
+  const [resultText, setResultText] = useState(Result);
   const handleResultInputChange = (e: {
     target: { value: SetStateAction<string> };
   }) => setResultText(e.target.value);
@@ -68,14 +68,21 @@ export default function UserStoryResult(props: any ) {
   const save = () => {
     setDisable(true);
     setBtnText("正在保存，请稍候...");
-    createUserStory(resultText)
+    let content = "";
+    if (resultText) {
+      content = resultText;
+    } else {
+      content = props.Result;
+    }
+
+    createUserStory(content)
       .then((response) => {
-		setStoryId(response.data.id);
-		OnStoryId(response.data.id)
-        console.log("save", resultText);
+        setStoryId(response.data.id);
+        OnStoryId(response.data.id);
+        console.log("save", content);
       })
       .catch((e) => {
-        console.log("err", resultText);
+        console.log("err", content);
       })
       .finally(() => {
         setDisable(false);

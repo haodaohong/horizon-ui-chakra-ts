@@ -35,7 +35,7 @@ import { createUserStory } from "services";
 
 export default function UserTaskResult(props: any) {
   const { ...rest } = props;
-  const { storyId } = props;
+  const { storyId, userStoryContent } = props;
 
   // Chakra Color Mode
   const [input, setInput] = useState("");
@@ -78,10 +78,8 @@ export default function UserTaskResult(props: any) {
         pe="20px"
         pt="5px"
       >
-        <Text>
-          Technology behind the BlockchainTechnology behind the
-          BlockchainTechnology behind the BlockchainTechnology behind the
-          Blockchain
+        <Text >
+          {userStoryContent}
         </Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
@@ -90,21 +88,13 @@ export default function UserTaskResult(props: any) {
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
           <Textarea
-            value={storyId}
+            value={input}
             height={"350px"}
             size="lg"
             marginBottom={"3"}
             placeholder="这里会展示生成结果..."
             onChange={handleResultInputChange}
           />
-          <Button
-            disabled={!input}
-            marginTop={"3"}
-            colorScheme="facebook"
-            onClick={onClickGenerate}
-          >
-            🪄 立即生成
-          </Button>
           <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook">
             💾 立即保存
           </Button>
