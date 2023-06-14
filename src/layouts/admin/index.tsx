@@ -4,7 +4,7 @@ import Footer from 'components/footer/FooterAdmin';
 // Layout components
 import Navbar from 'components/navbar/NavbarAdmin';
 import Sidebar from 'components/sidebar/Sidebar';
-import { SidebarContext } from 'contexts/SidebarContext';
+import { ItemProvider, SidebarContext } from 'contexts/SidebarContext';
 import { useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import routes from 'routes';
@@ -59,6 +59,7 @@ export default function Dashboard(props: { [x: string]: any }) {
 	const { onOpen } = useDisclosure();
 	return (
 		<Box>
+			<ItemProvider>
 			<SidebarContext.Provider
 				value={{
 					toggleSidebar,
@@ -105,6 +106,7 @@ export default function Dashboard(props: { [x: string]: any }) {
 					</Box>
 				</Box>
 			</SidebarContext.Provider>
+			</ItemProvider>
 		</Box>
 	);
 }

@@ -6,18 +6,26 @@ import Card from 'components/card/Card';
 import { MdEdit } from 'react-icons/md';
 
 export default function Project(props: {
+	key: any;
 	title: string;
 	ranking: number | string;
 	link: string;
 	image: string;
+	onEditClick: any;
 	[x: string]: any;
 }) {
-	const { title, ranking, link, image, ...rest } = props;
+	const { key, title, ranking, link, image, onEditClick, ...rest } = props;
 	// Chakra Color Mode
 	const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
 	const textColorSecondary = 'gray.400';
 	const brandColor = useColorModeValue('brand.500', 'white');
 	const bg = useColorModeValue('white', 'navy.700');
+
+	const handleClick = (e: any,) => {
+		e.preventDefault();
+		onEditClick(e);
+	} 
+
 	return (
 		<Card bg={bg} {...rest} p='14px'>
 			<Flex align='center' direction={{ base: 'column', md: 'row' }}>
@@ -31,7 +39,7 @@ export default function Project(props: {
 						<Button>Test Case</Button>
 					</Text>
 				</Box>
-				<Link href={link} variant='no-hover' me='16px' ms='auto' p='0px !important'>
+				<Link href={link} variant='no-hover' me='16px' ms='auto' p='0px !important' onClick={(event) => handleClick(event)}>
 					<Icon as={MdEdit} color='secondaryGray.500' h='18px' w='18px' />
 				</Link>
 			</Flex>

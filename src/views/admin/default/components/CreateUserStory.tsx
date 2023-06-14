@@ -3,7 +3,8 @@ import { Box,FormErrorMessage,FormControl,FormHelperText, Button, Editable, Edit
 // Custom components
 import Card from 'components/card/Card';
 import LineChart from 'components/charts/LineChart';
-import { SetStateAction, useState } from 'react';
+import { ItemContext } from 'contexts/SidebarContext';
+import { SetStateAction, useContext, useState } from 'react';
 import { IoCheckmarkCircle } from 'react-icons/io5';
 import { MdBarChart, MdOutlineCalendarToday } from 'react-icons/md';
 // Assets
@@ -30,6 +31,11 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 	const bgButton = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
 	const bgHover = useColorModeValue({ bg: 'secondaryGray.400' }, { bg: 'whiteAlpha.50' });
 	const bgFocus = useColorModeValue({ bg: 'secondaryGray.300' }, { bg: 'whiteAlpha.100' });
+	const {sharedItem, shareItem, clearItem} = useContext(ItemContext);
+
+	const handleClickOnNew = () => {
+		clearItem();
+	}
 	return (
 		<Card justifyContent='center' alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
 			<Flex  align='center' justify='space-between' w='100%' pe='20px' pt='5px'>
@@ -46,6 +52,7 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 					<FormLabel>验收标准有哪些？</FormLabel>
 					<Input marginBottom={'5'}  value={acceptance} onChange={handleAcceptanceInputChange} />
 					<Button onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance);}} marginTop={'3'} colorScheme='facebook'>🪄 立即生成</Button>
+					<Button marginLeft={'3'} marginTop={'3'} onClick={handleClickOnNew}>{'创建新的用户故事'}</Button>
 				</FormControl>
 			</Flex>
 		</Card>

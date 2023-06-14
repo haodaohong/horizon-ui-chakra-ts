@@ -102,6 +102,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
+
           <Textarea
             value={resultText}
             height={"350px"}
@@ -110,6 +111,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
             placeholder="这里会展示生成结果..."
             onChange={handleResultInputChange}
           />
+
           <Button
             disabled={disable}
             onClick={save}
