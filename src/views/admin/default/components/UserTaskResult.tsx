@@ -31,17 +31,22 @@ import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
 } from "variables/charts";
-import { createUserTask } from "services";
+import { createUserTask, getAllUserStories } from "services";
+import React from "react";
+import { ItemContext } from "contexts/SidebarContext";
 
 export default function UserTaskResult(props: any) {
   const { ...rest } = props;
   const { storyId, userStoryContent } = props;
+	const {editTask, setStories, setAllUserStories} = React.useContext(ItemContext);
 
   // Chakra Color Mode
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(editTask);
   const handleInputChange = (e: {
     target: { value: SetStateAction<string> };
   }) => setInput(e.target.value);
+
+
 
   const isError = input === "";
   const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -58,14 +63,16 @@ export default function UserTaskResult(props: any) {
     { bg: "whiteAlpha.100" }
   );
 
-  // const [resultText, setResultText] = useState("");
-  // const handleResultInputChange = (e: {
-  //   target: { value: SetStateAction<string> };
-  // }) => setResultText(e.target.value);
-
   const OnSave =async (data:string) => {
     createUserTask(storyId, JSON.stringify(data)).then(e=>{
       console.log('save', e)
+
+      getAllUserStories().then(e => {
+				setStories(e.data);
+				setAllUserStories(e.data);
+			}).catch(e => {
+				console.error('getAllUserStories error:', e);
+			});	
     });
   }
 

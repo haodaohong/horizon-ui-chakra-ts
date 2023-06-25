@@ -53,8 +53,6 @@ export default function Project(props: {
 					{title}
 					</Text>
 				</Link>
-					 
-					
 					<Text fontWeight='500' color={textColorSecondary} fontSize='sm' me='4px'>
 						<Flex direction={{base: 'row'}} style={{marginTop: "15px"}}>
 							<Button marginRight={2} onClick={(event) => handleTaskClick(event)}>Task</Button>

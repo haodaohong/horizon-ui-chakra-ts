@@ -22,12 +22,14 @@ import {
 // Custom components
 import Card from "components/card/Card";
 import LineChart from "components/charts/LineChart";
+import { ItemContext } from "contexts/SidebarContext";
+import React from "react";
 import { SetStateAction, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
-import { createTestCase } from "services";
+import { createTestCase, getAllUserStories } from "services";
 import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
@@ -36,9 +38,11 @@ import {
 export default function UserTestCaseResult(props: any) {
   const { ...rest } = props;
   const { storyId, userStoryContent } = props;
+	const {editTestCase, setStories, setAllUserStories} = React.useContext(ItemContext);
+
 
   // Chakra Color Mode
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(editTestCase);
   const handleInputChange = (e: {
     target: { value: SetStateAction<string> };
   }) => setInput(e.target.value);
@@ -66,6 +70,13 @@ export default function UserTestCaseResult(props: any) {
   const OnSave =async (data:string) => {
     createTestCase(storyId, JSON.stringify(data)).then(e=>{
       console.log('save', e)
+
+      getAllUserStories().then(e => {
+				setStories(e.data);
+				setAllUserStories(e.data);
+			}).catch(e => {
+				console.error('getAllUserStories error:', e);
+			});	
     });
   }
 

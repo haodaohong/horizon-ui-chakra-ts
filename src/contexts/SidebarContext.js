@@ -14,6 +14,8 @@ export const ItemProvider = ({children}) => {
     const [showGenerateForm,setShowGenerateForm] = useState(true)
     const [storyId, setStoryId] = useState(0);
     const [allUserStories,setAllUserStories] = useState([]);
+    const [editTask,setEditTask] = useState('')
+    const [editTestCase,setEditTestCase] = useState('')
     const shareItem = (item) => {
         setSharedItem(item);
     }
@@ -22,6 +24,6 @@ export const ItemProvider = ({children}) => {
         setSharedItem(null);
     }
 
-    return (<ItemContext.Provider value={{allUserStories,setAllUserStories,showGenerateForm,setShowGenerateForm,storyId,showNewStory, setShowNewStory, setStoryId,setShowEditTask,setShowEditTestCase,showEditTask, showEditTestCase, showEditStory, sharedItem, shareItem, clearItem, setShowEditStory}}>{children}</ItemContext.Provider>);
+    return (<ItemContext.Provider value={{editTestCase,setEditTestCase,editTask,setEditTask,allUserStories,setAllUserStories,showGenerateForm,setShowGenerateForm,storyId,showNewStory, setShowNewStory, setStoryId,setShowEditTask,setShowEditTestCase,showEditTask, showEditTestCase, showEditStory, sharedItem, shareItem, clearItem, setShowEditStory}}>{children}</ItemContext.Provider>);
 
 }

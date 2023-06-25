@@ -22,7 +22,7 @@ export default function Stories(props: { [x: string]: any }) {
 	const [stories, setStories] = React.useState<UserStory[]>([]);
 	const [selectedStory, setSelectedStory] = React.useState<UserStory>(null);
 
-	const {allUserStories,setAllUserStories,setShowGenerateForm,sharedItem, shareItem, clearItem, setShowEditStory,setShowEditTask,setShowEditTestCase,setStoryId} = React.useContext(ItemContext);
+	const {setEditTask,setEditTestCase,allUserStories,setAllUserStories,setShowGenerateForm,sharedItem, shareItem, clearItem, setShowEditStory,setShowEditTask,setShowEditTestCase,setStoryId} = React.useContext(ItemContext);
 
 	React.useEffect(() => {
 		const handleResize = () => {
@@ -37,19 +37,14 @@ export default function Stories(props: { [x: string]: any }) {
 			console.error('getAllUserStories error:', e);
 		}));
 
-		console.log('allUserStories', allUserStories);
-		if(allUserStories && allUserStories.length > 0){
-			setStories(allUserStories)
-		}else{
-			getAllUserStories().then(e => {
-				setStories(e.data);
-				setAllUserStories(e.data);
-				console.log('getAllUserStories', e.data);
-				console.log('allUserStories', allUserStories);
-			}).catch(e => {
-				console.error('getAllUserStories error:', e);
-			});	
-		}
+		getAllUserStories().then(e => {
+			setStories(e.data);
+			setAllUserStories(e.data);
+			console.log('getAllUserStories', e.data);
+			console.log('allUserStories', allUserStories);
+		}).catch(e => {
+			console.error('getAllUserStories error:', e);
+		});	
 
 
 		handleResize();
@@ -94,6 +89,7 @@ export default function Stories(props: { [x: string]: any }) {
 		setShowEditStory(false);
 		setShowEditTask(true);
 		setShowEditTestCase(false);
+		setEditTask(story.userTasks[0]?.description);
 	}
 	const handleTestCaseClick = (idx: number) => {
 		clearItem();
@@ -105,6 +101,7 @@ export default function Stories(props: { [x: string]: any }) {
 		setShowEditStory(false);
 		setShowEditTask(false);
 		setShowEditTestCase(true);
+		setEditTestCase(story.testCases[0]?.description);
 	}
 	// Chakra Color Mode
 	const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
