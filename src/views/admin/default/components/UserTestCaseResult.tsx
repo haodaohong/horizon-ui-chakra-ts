@@ -27,6 +27,7 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 // Assets
 import { RiArrowUpSFill } from "react-icons/ri";
+import { createTestCase } from "services";
 import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
@@ -62,8 +63,14 @@ export default function UserTestCaseResult(props: any) {
     userStoryId: storyId,
   };
 
-  const OnGenerateTestCase = async (payload: any) => {
-    const endpoint = `https://ai.api.1app.site/api/A_AITestCase/Generate`;
+  const OnSave =async (data:string) => {
+    createTestCase(storyId, JSON.stringify(data)).then(e=>{
+      console.log('save', e)
+    });
+  }
+
+  const OnGenerateTestCase = async (id: any) => {
+    const endpoint = `https://ai.api.1app.site/api/A_AITestCase/Generate?storyId=${id}`;
     const controller = new AbortController();
     const response = await fetch(endpoint, {
       method: "POST",
@@ -73,8 +80,7 @@ export default function UserTestCaseResult(props: any) {
           Authorization: `Bearer WM5ABA9E202D94C43ASW3CA6600F2BF77FWM`,
         },
       },
-      signal: controller.signal,
-      body: JSON.stringify(payload),
+      signal: controller.signal
     });
     if (!response.ok) {
       console.error(response.statusText);
@@ -131,12 +137,10 @@ export default function UserTestCaseResult(props: any) {
             value={input}
             onChange={handleInputChange}
           />
-          <Button
-            marginTop={"3"}
-            marginLeft={"3"}
-            colorScheme="facebook"
-            onClick={() => OnGenerateTestCase(payload)}
-          >
+          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTestCase(storyId)}>
+            🤖 Generate
+          </Button>
+          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(input)}>
             💾 Save
           </Button>
         </FormControl>

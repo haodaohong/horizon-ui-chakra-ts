@@ -22,7 +22,7 @@ export default function Stories(props: { [x: string]: any }) {
 	const [stories, setStories] = React.useState<UserStory[]>([]);
 	const [selectedStory, setSelectedStory] = React.useState<UserStory>(null);
 
-	const {setShowGenerateForm,sharedItem, shareItem, clearItem, setShowEditStory,setShowEditTask,setShowEditTestCase,setStoryId} = React.useContext(ItemContext);
+	const {allUserStories,setAllUserStories,setShowGenerateForm,sharedItem, shareItem, clearItem, setShowEditStory,setShowEditTask,setShowEditTestCase,setStoryId} = React.useContext(ItemContext);
 
 	React.useEffect(() => {
 		const handleResize = () => {
@@ -37,13 +37,20 @@ export default function Stories(props: { [x: string]: any }) {
 			console.error('getAllUserStories error:', e);
 		}));
 
-		getAllUserStories().then(e => {
-			setStories(e.data)
-			console.log('getAllUserStories', e);
+		console.log('allUserStories', allUserStories);
+		if(allUserStories && allUserStories.length > 0){
+			setStories(allUserStories)
+		}else{
+			getAllUserStories().then(e => {
+				setStories(e.data);
+				setAllUserStories(e.data);
+				console.log('getAllUserStories', e.data);
+				console.log('allUserStories', allUserStories);
+			}).catch(e => {
+				console.error('getAllUserStories error:', e);
+			});	
+		}
 
-		}).catch(e => {
-			console.error('getAllUserStories error:', e);
-		});
 
 		handleResize();
 
@@ -53,6 +60,7 @@ export default function Stories(props: { [x: string]: any }) {
 	  };
 	  handleResize();
 	}, [stories.length]);
+
 	const handleEditClick = (idx: any) => {
 		clearItem();
 		const story = stories.find(x=>x.id === idx);

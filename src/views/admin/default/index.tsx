@@ -70,7 +70,8 @@ export default function UserReports() {
     who: string,
     whatToDo: string,
     whyToDo: string,
-    acceptance: string
+    acceptance: string,
+    isEnglish: string
   ) {
     setShowStoryBox(true);
     // setShowTaskBox(true);
@@ -81,6 +82,7 @@ export default function UserReports() {
       whatToDo: whatToDo,
       whyToDo: whyToDo,
       acceptance: acceptance,
+      isEnglish: isEnglish
     };
 
     const controller = new AbortController();
@@ -129,7 +131,9 @@ export default function UserReports() {
   };
 
   const onShowGenerateForm = (storyId: number) => {
-    setShowGenerateForm(true);
+    if(setShowGenerateForm){
+      setShowGenerateForm(true);
+    }
   };
 
   return (

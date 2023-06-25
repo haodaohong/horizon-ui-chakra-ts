@@ -1,5 +1,5 @@
 // Chakra imports
-import { Box,FormErrorMessage,FormControl,FormHelperText, Button, Editable, EditablePreview, EditableTextarea, Flex, FormLabel, Icon, Input, Text, useColorModeValue, useBoolean, WrapItem, Heading } from '@chakra-ui/react';
+import { Box,FormErrorMessage,FormControl,FormHelperText, Button, Editable, EditablePreview, EditableTextarea, Flex, FormLabel, Icon, Input, Text, useColorModeValue, useBoolean, WrapItem, Heading, Switch, VStack } from '@chakra-ui/react';
 // Custom components
 import Card from 'components/card/Card';
 import LineChart from 'components/charts/LineChart';
@@ -19,10 +19,12 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 	const [whatToDo, setWhatToDo] = useState('')
 	const [whyToDo, setWhyToDo] = useState('')
 	const [acceptance, setAcceptance] = useState('')
+	const [isEnglish, setIsEnglish] = useState(false)
 	const handleWhoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWho(e.target.value)
 	const handleWhatToDoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWhatToDo(e.target.value)
 	const handleWhyToDoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWhyToDo(e.target.value)
 	const handleAcceptanceInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setAcceptance(e.target.value)
+	const handleIsEnglishInputChange = (e: { target: { checked: SetStateAction<boolean>; }; }) => setIsEnglish(e.target.checked)
 
 	const textColor = useColorModeValue('secondaryGray.900', 'white');
 	const textColorSecondary = useColorModeValue('secondaryGray.600', 'white');
@@ -42,6 +44,7 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 			<Flex  align='center' justify='space-between' w='100%' pe='20px' pt='5px'>
 				<Heading m={"3"}>Create New User Story</Heading>
 			</Flex>
+			<VStack w={'100%'}>
 			<Flex w='100%' flexDirection={{ base: 'column', lg: 'row' }}>
 				<FormControl>
 					<FormLabel>Who is the intended audience?</FormLabel>
@@ -52,10 +55,13 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 					<Input marginBottom={'5'}  value={whyToDo} onChange={handleWhyToDoInputChange} />
 					<FormLabel>What are the acceptance criteria?</FormLabel>
 					<Input marginBottom={'5'}  value={acceptance} onChange={handleAcceptanceInputChange} />
-					<Button onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance);setShowEditStory(true);}} marginTop={'3'} colorScheme='facebook'>🪄 Generate</Button>
+					<FormLabel htmlFor='email-alerts'>Response in English?</FormLabel>
+					<Switch marginBottom={'5'} id='email-alerts' onChange={handleIsEnglishInputChange}/>
 					{/* <Button marginLeft={'3'} marginTop={'3'} onClick={handleClickOnNew}>{'创建新的用户故事'}</Button> */}
 				</FormControl>
 			</Flex>
+					<Button onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance,isEnglish);setShowEditStory(true);}} marginTop={'3'} colorScheme='facebook'>🪄 Generate</Button>
+			</VStack>
 		</Card>
 	);
 }

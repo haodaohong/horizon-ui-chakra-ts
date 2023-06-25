@@ -64,7 +64,7 @@ export default function UserTaskResult(props: any) {
   // }) => setResultText(e.target.value);
 
   const OnSave =async (data:string) => {
-    createUserTask(storyId, data).then(e=>{
+    createUserTask(storyId, JSON.stringify(data)).then(e=>{
       console.log('save', e)
     });
   }
@@ -141,7 +141,7 @@ export default function UserTaskResult(props: any) {
           <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTasks(storyId)}>
             🤖 Generate
           </Button>
-          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(storyId)}>
+          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(input)}>
             💾 Save
           </Button>
         </FormControl>

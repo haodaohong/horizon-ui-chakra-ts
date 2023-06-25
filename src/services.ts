@@ -26,7 +26,7 @@ interface UserTask {
     documentId?: string | null;
   }
 
-export  interface UserStory {
+export interface UserStory {
     id: number;
     name?: string | null;
     description?: string | null;
@@ -56,9 +56,9 @@ export const createUserStory = async (data:string) => {
   }
 };
 
-export const updateUserStory = async (storyId:string,data:string) => {
+export const updateUserStory = async (storyId:number,data:string) => {
   try {
-      return await api.post<UserStory>('/A_AIUserStory/Update?storyId='+storyId,data);
+      return await api.post<UserStory>('/A_AIUserStory/UpdateById?storyId='+storyId,data);
   } catch (error) {
     console.error('Error create data:', error);
   }
@@ -90,9 +90,25 @@ export const createUserTask = async (userStoryId:string, data:string) => {
 
 export const createTestCase = async (userStoryId:string, data:string) => {
   try {
-      return await api.post<UserTask>(`/A_AITestCase/Create?userStoryId=${userStoryId}`,data);
+      return await api.post<TestCase>(`/A_AITestCase/Create?userStoryId=${userStoryId}`,data);
   } catch (error) {
     console.error('Error fetching data:', error);
+  }
+};
+
+export const updateUserTask = async (storyId:number,data:string) => {
+  try {
+      return await api.post<UserTask>('/A_AIUserTask/UpdateById?storyId='+storyId,data);
+  } catch (error) {
+    console.error('Error create data:', error);
+  }
+};
+
+export const updateTestCase = async (storyId:number,data:string) => {
+  try {
+      return await api.post<TestCase>('/A_AITestCase/UpdateById?storyId='+storyId,data);
+  } catch (error) {
+    console.error('Error create data:', error);
   }
 };
 

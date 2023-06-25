@@ -10,6 +10,7 @@ import {
   EditableTextarea,
   Flex,
   FormLabel,
+  VStack,
   Icon,
   Input,
   Text,
@@ -34,7 +35,9 @@ import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
 } from "variables/charts";
-import { createUserStory } from "services";
+import { createUserStory,updateUserStory } from "services";
+import React from "react";
+import { ItemContext } from "contexts/SidebarContext";
 interface UserStoryResultProps {
   Result: string;
   onstoryid: any;
@@ -47,8 +50,8 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
   const [disable, setDisable] = useState(false);
   const [btnText, setBtnText] = useState("Save");
   const [input, setInput] = useState("");
-  const [storyId, setStoryId] = useState(0);
   const [resultText, setResultText] = useState(props.Result);
+	const {storyId,setStoryId} = React.useContext(ItemContext);
   useEffect(() => {
     setResultText(props.Result);
   }, [props.Result]);
@@ -75,7 +78,9 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
   }) => setResultText(e.target.value);
 
   const handleShowGenerateForm = (e:number) => {
-    onShowGenerateForm(e);
+    if(onShowGenerateForm){
+      onShowGenerateForm(e);
+    }
   }
 
   const save = () => {
@@ -83,7 +88,8 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
     setBtnText("Saving...");
     console.log('resultText', resultText);
     if (resultText) {
-      createUserStory(resultText)
+      if(storyId > 0){
+        updateUserStory(storyId ,resultText)
         .then((response) => {
           publish('storySaved');
           setStoryId(response.data.id);
@@ -97,6 +103,22 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
           setDisable(false);
           setBtnText("Save");
         });
+      }else{
+        createUserStory(resultText)
+        .then((response) => {
+          publish('storySaved');
+          setStoryId(response.data.id);
+          onstoryid(response.data.id)
+          console.log("save", resultText);
+        })
+        .catch((e) => {
+          console.log("err", resultText);
+        })
+        .finally(() => {
+          setDisable(false);
+          setBtnText("Save");
+        });
+      }
     }
   };
 
@@ -105,6 +127,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
         <Heading m={"3"}>User Story Result：</Heading>
       </Flex>
+      <VStack w={'100%'}>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
 
@@ -117,7 +140,14 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
             onChange={handleResultInputChange}
           />
 
-          <Button
+
+          {/* <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => handleShowGenerateForm(storyId)}>
+            🤖 Regenerate
+          </Button> */}
+        </FormControl>
+      </Flex>
+
+      <Button
             disabled={disable}
             onClick={save}
             marginTop={"3"}
@@ -125,12 +155,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
           >
             💾 {btnText}
           </Button>
-
-          {/* <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => handleShowGenerateForm(storyId)}>
-            🤖 Regenerate
-          </Button> */}
-        </FormControl>
-      </Flex>
+      </VStack>
     </Card>
   );
 }
