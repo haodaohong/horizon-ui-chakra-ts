@@ -31,7 +31,7 @@ import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
 } from "variables/charts";
-import { createUserStory } from "services";
+import { createUserTask } from "services";
 
 export default function UserTaskResult(props: any) {
   const { ...rest } = props;
@@ -63,8 +63,14 @@ export default function UserTaskResult(props: any) {
   //   target: { value: SetStateAction<string> };
   // }) => setResultText(e.target.value);
 
+  const OnSave =async (data:string) => {
+    createUserTask(storyId, data).then(e=>{
+      console.log('save', e)
+    });
+  }
+
   const OnGenerateTasks = async (id: number) => {
-    const endpoint = `https://ai.api.1app.site/api/A_AIUserTask/Create?userStoryId=${id}`;
+    const endpoint = `http://ai.api.1app.site/api/A_AIUserTask/Generate?storyId=${id}`;
     const controller = new AbortController();
     const response = await fetch(endpoint, {
       method: "POST",
@@ -107,7 +113,7 @@ export default function UserTaskResult(props: any) {
   return (
     <Card w="100%" mb="0px" {...rest}>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
-        <Heading m={"3"}>User Story：</Heading>
+        <Heading m={"3"}>Generate Task：</Heading>
       </Flex>
       <Flex
         marginLeft={4}
@@ -120,20 +126,23 @@ export default function UserTaskResult(props: any) {
         <Text>{userStoryContent}</Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
-        <Heading m={"3"}>Task 生成结果：</Heading>
+        <Heading m={"3"}>Task Result：</Heading>
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
           <Textarea
             value={input}
-            height={"350px"}
+            height={"550px"}
             size="lg"
             marginBottom={"3"}
             placeholder="这里会展示生成结果..."
             onChange={handleInputChange}
           />
           <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTasks(storyId)}>
-            💾 立即保存
+            🤖 Generate
+          </Button>
+          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(storyId)}>
+            💾 Save
           </Button>
         </FormControl>
       </Flex>

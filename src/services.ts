@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
 
-interface A_AIUserTask {
+interface UserTask {
     id: number;
     userStoryId: number;
     name?: string | null;
@@ -14,7 +14,7 @@ interface A_AIUserTask {
     documentId?: string | null;
   }
 
-  interface A_AITestCase {
+  interface TestCase {
     id: number;
     name?: string | null;
     description?: string | null;
@@ -36,8 +36,8 @@ export  interface UserStory {
     isDelete: boolean;
     sprintId?: number | null;
     documentId?: string | null;
-    userTasks?: A_AIUserTask[] | null;
-    testCases?: A_AITestCase[] | null;
+    userTasks?: UserTask[] | null;
+    testCases?: TestCase[] | null;
   }
 
 export const getAllUserStories = async () => {
@@ -77,5 +77,29 @@ export const generateUserStory = async () => {
       return await api.post('/A_AIUserStory/Generate');
   } catch (error) {
     console.error('Error generate data:', error);
+  }
+};
+
+export const createUserTask = async (userStoryId:string, data:string) => {
+  try {
+      return await api.post<UserTask>(`/A_AIUserTask/Create?userStoryId=${userStoryId}`,data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+export const createTestCase = async (userStoryId:string, data:string) => {
+  try {
+      return await api.post<UserTask>(`/A_AITestCase/Create?userStoryId=${userStoryId}`,data);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+export const deleteUserStory = async (id:number) => {
+  try {
+      return await api.get(`/A_AIUserStory/Delete?id=${id}`);
+  } catch (error) {
+    console.error('Error fetching data:', error);
   }
 };

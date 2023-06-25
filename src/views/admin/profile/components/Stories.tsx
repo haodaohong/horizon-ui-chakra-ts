@@ -8,7 +8,7 @@ import Project3 from 'assets/img/profile/Project3.png';
 // Custom components
 import Card from 'components/card/Card';
 import Story from 'views/admin/profile/components/Story';
-import { getAllUserStories } from 'services';
+import { getAllUserStories,deleteUserStory } from 'services';
 
 import { UserStory } from 'services';
 import { ItemContext } from 'contexts/SidebarContext';
@@ -22,7 +22,7 @@ export default function Stories(props: { [x: string]: any }) {
 	const [stories, setStories] = React.useState<UserStory[]>([]);
 	const [selectedStory, setSelectedStory] = React.useState<UserStory>(null);
 
-	const {sharedItem, shareItem, clearItem} = React.useContext(ItemContext);
+	const {setShowGenerateForm,sharedItem, shareItem, clearItem, setShowEditStory,setShowEditTask,setShowEditTestCase,setStoryId} = React.useContext(ItemContext);
 
 	React.useEffect(() => {
 		const handleResize = () => {
@@ -53,10 +53,50 @@ export default function Stories(props: { [x: string]: any }) {
 	  };
 	  handleResize();
 	}, [stories.length]);
-	const handleClick = (idx: any) => {
+	const handleEditClick = (idx: any) => {
 		clearItem();
-		setSelectedStory({...stories[idx]});
-		shareItem({...stories[idx]});
+		const story = stories.find(x=>x.id === idx);
+		setSelectedStory({...story});
+		shareItem({...story});
+		setStoryId(story.id);
+		setShowGenerateForm(true);
+		setShowEditStory(true);
+		setShowEditTask(false);
+		setShowEditTestCase(false);
+	}
+	const handleDeleteClick = (idx: number) => {
+		deleteUserStory(idx).then(e => {
+			clearItem();
+			getAllUserStories().then(e => {
+				setStories(e.data)
+				console.log('getAllUserStories', e);
+	
+			}).catch(e => {
+				console.error('getAllUserStories error:', e);
+			});
+		});
+	}
+	const handleTaskClick = (idx: any) => {
+		clearItem();
+		const story = stories.find(x=>x.id === idx);
+		setSelectedStory({...story});
+		shareItem({...story});
+		setStoryId(story.id);
+		setShowGenerateForm(false);
+		setShowEditStory(false);
+		setShowEditTask(true);
+		setShowEditTestCase(false);
+	}
+	const handleTestCaseClick = (idx: number) => {
+		clearItem();
+		const story = stories.find(x=>x.id === idx);
+		setSelectedStory({...story});
+		shareItem({...story});
+		setStoryId(story.id);
+		setShowGenerateForm(false);
+		setShowEditStory(false);
+		setShowEditTask(false);
+		setShowEditTestCase(true);
 	}
 	// Chakra Color Mode
 	const textColorPrimary = useColorModeValue('secondaryGray.900', 'white');
@@ -67,14 +107,17 @@ export default function Stories(props: { [x: string]: any }) {
 			{
 				stories?.map((story, idx )=> (
 				<Story
-					key={idx}
-					boxShadow={cardShadow}
-					mb='20px'
-					image={Project1}
-					ranking='1'
-					link='#'
-					title={story.id + '. ' + story.name}
-					onEditClick={() => handleClick(idx)}
+						key={idx}
+						boxShadow={cardShadow}
+						mb='20px'
+						image={Project1}
+						ranking='1'
+						link='#'
+						title={story.id + '. ' + story.name}
+						onDeleteClick={() => handleDeleteClick(story.id)} 
+						onEditClick={() => handleEditClick(story.id)} 
+						onTaskClick={() => handleTaskClick(story.id)} 
+						onTestCaseClick={() => handleTestCaseClick(story.id)} 			
 				/>))
 			}
 		</Card>

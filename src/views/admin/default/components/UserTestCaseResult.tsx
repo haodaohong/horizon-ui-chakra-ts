@@ -63,7 +63,7 @@ export default function UserTestCaseResult(props: any) {
   };
 
   const OnGenerateTestCase = async (payload: any) => {
-    const endpoint = `https://ai.api.1app.site/api/A_AITestCase/Create`;
+    const endpoint = `https://ai.api.1app.site/api/A_AITestCase/Generate`;
     const controller = new AbortController();
     const response = await fetch(endpoint, {
       method: "POST",
@@ -106,7 +106,7 @@ export default function UserTestCaseResult(props: any) {
   return (
     <Card w="100%" mb="0px" {...rest}>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
-        <Heading m={"3"}>User Story：</Heading>
+        <Heading m={"3"}>Generate Test Case</Heading>
       </Flex>
       <Flex
         marginLeft={4}
@@ -119,7 +119,7 @@ export default function UserTestCaseResult(props: any) {
         <Text>{userStoryContent}</Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
-        <Heading m={"3"}>Test Case 生成结果：</Heading>
+        <Heading m={"3"}>Test Case Result：</Heading>
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
@@ -137,7 +137,7 @@ export default function UserTestCaseResult(props: any) {
             colorScheme="facebook"
             onClick={() => OnGenerateTestCase(payload)}
           >
-            💾 立即保存
+            💾 Save
           </Button>
         </FormControl>
       </Flex>

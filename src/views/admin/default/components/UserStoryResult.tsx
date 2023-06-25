@@ -37,14 +37,15 @@ import {
 import { createUserStory } from "services";
 interface UserStoryResultProps {
   Result: string;
-  OnStoryId: any;
+  onstoryid: any;
+  onShowGenerateForm: any;
 }
 const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
   const { ...rest } = props;
-  const { OnStoryId, Result } = props;
+  const { onstoryid, Result, onShowGenerateForm } = props;
   // Chakra Color Mode
   const [disable, setDisable] = useState(false);
-  const [btnText, setBtnText] = useState("立即保存");
+  const [btnText, setBtnText] = useState("Save");
   const [input, setInput] = useState("");
   const [storyId, setStoryId] = useState(0);
   const [resultText, setResultText] = useState(props.Result);
@@ -73,16 +74,20 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
     target: { value: SetStateAction<string> };
   }) => setResultText(e.target.value);
 
+  const handleShowGenerateForm = (e:number) => {
+    onShowGenerateForm(e);
+  }
+
   const save = () => {
     setDisable(true);
-    setBtnText("正在保存，请稍候...");
+    setBtnText("Saving...");
     console.log('resultText', resultText);
     if (resultText) {
       createUserStory(resultText)
         .then((response) => {
           publish('storySaved');
           setStoryId(response.data.id);
-          OnStoryId(response.data.id)
+          onstoryid(response.data.id)
           console.log("save", resultText);
         })
         .catch((e) => {
@@ -90,7 +95,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
         })
         .finally(() => {
           setDisable(false);
-          setBtnText("立即保存");
+          setBtnText("Save");
         });
     }
   };
@@ -98,7 +103,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
   return (
     <Card w="100%" mb="0px" {...rest}>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
-        <Heading m={"3"}>User Story 生成结果：</Heading>
+        <Heading m={"3"}>User Story Result：</Heading>
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
         <FormControl>
@@ -108,7 +113,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
             height={"350px"}
             size="lg"
             marginBottom={"3"}
-            placeholder="这里会展示生成结果..."
+            placeholder="Result here..."
             onChange={handleResultInputChange}
           />
 
@@ -120,6 +125,10 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
           >
             💾 {btnText}
           </Button>
+
+          {/* <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => handleShowGenerateForm(storyId)}>
+            🤖 Regenerate
+          </Button> */}
         </FormControl>
       </Flex>
     </Card>

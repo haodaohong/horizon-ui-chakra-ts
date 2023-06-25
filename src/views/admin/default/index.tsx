@@ -44,13 +44,12 @@ export default function UserReports() {
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const [result, setResult] = useState("");
-  const [storyId, setStoryId] = useState(0);
 
   const [showStoryBox, setShowStoryBox] = useState(false);
   const [showTaskBox, setShowTaskBox] = useState(false);
   const [showTestCaseBox, setShowTestCaseBox] = useState(false);
 
-  const {sharedItem, shareItem, clearItem} = useContext(ItemContext);
+  const {showGenerateForm, setShowGenerateForm,showNewStory,sharedItem,storyId,setStoryId, shareItem, clearItem,showEditStory,showEditTask,showEditTestCase} = useContext(ItemContext);
 
   useEffect(() => {
     if(sharedItem){
@@ -129,26 +128,35 @@ export default function UserReports() {
     setShowTestCaseBox(true);
   };
 
+  const onShowGenerateForm = (storyId: number) => {
+    setShowGenerateForm(true);
+  };
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
         height={"100%"}
-        columns={{ base: 1, md: 2, xl: 2 }}
+        columns={{ base: 1, md: 1, xl: 2 }}
         gap="20px"
         mb="20px"
       >
-        <CreateUserStory Generate={OnGenerateUserStory} />
-        {showStoryBox ? (
-          <UserStoryResult Result={result} OnStoryId={OnStorySave} />
+        {(showGenerateForm) ? (
+          <CreateUserStory Generate={OnGenerateUserStory} />
         ) : (
           <></>
         )}
-        {showTaskBox ? (
-          <UserTaskResult storyId={storyId} userStoryContent={result} />
+        {showEditStory ? (
+       <> 
+       <UserStoryResult Result={result} onstoryid={OnStorySave} onShowGenerateForm={onShowGenerateForm} /></>
         ) : (
           <></>
         )}
-        {showTestCaseBox ? (
+        {showEditTask ? (
+          <UserTaskResult storyId={storyId} userStoryContent={result}/>
+        ) : (
+          <></>
+        )}
+        {showEditTestCase ? (
           <UserTestCaseResult storyId={storyId} userStoryContent={result} />
         ) : (
           <></>

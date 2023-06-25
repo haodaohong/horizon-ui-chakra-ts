@@ -31,7 +31,8 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 	const bgButton = useColorModeValue('secondaryGray.300', 'whiteAlpha.100');
 	const bgHover = useColorModeValue({ bg: 'secondaryGray.400' }, { bg: 'whiteAlpha.50' });
 	const bgFocus = useColorModeValue({ bg: 'secondaryGray.300' }, { bg: 'whiteAlpha.100' });
-	const {sharedItem, shareItem, clearItem} = useContext(ItemContext);
+	const {setShowEditStory,sharedItem, shareItem, clearItem} = useContext(ItemContext);
+
 
 	const handleClickOnNew = () => {
 		clearItem();
@@ -39,20 +40,20 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 	return (
 		<Card justifyContent='center' alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
 			<Flex  align='center' justify='space-between' w='100%' pe='20px' pt='5px'>
-				<Heading m={"3"}>欢迎使用 WorkMan！</Heading>
+				<Heading m={"3"}>Create New User Story</Heading>
 			</Flex>
 			<Flex w='100%' flexDirection={{ base: 'column', lg: 'row' }}>
 				<FormControl>
-					<FormLabel>目标用户是谁？</FormLabel>
+					<FormLabel>Who is the intended audience?</FormLabel>
 					<Input marginBottom={'5'}  value={who} onChange={handleWhoInputChange} colorScheme='facebook'/>
-					<FormLabel>目标用户想做什么功能？</FormLabel>
+					<FormLabel>What functions does the target user desire?</FormLabel>
 					<Input marginBottom={'5'}  value={whatToDo} onChange={handleWhatToDoInputChange} />
-					<FormLabel>用户为什么需要这些功能？</FormLabel>
+					<FormLabel>Why does the user require these capabilities?</FormLabel>
 					<Input marginBottom={'5'}  value={whyToDo} onChange={handleWhyToDoInputChange} />
-					<FormLabel>验收标准有哪些？</FormLabel>
+					<FormLabel>What are the acceptance criteria?</FormLabel>
 					<Input marginBottom={'5'}  value={acceptance} onChange={handleAcceptanceInputChange} />
-					<Button onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance);}} marginTop={'3'} colorScheme='facebook'>🪄 立即生成</Button>
-					<Button marginLeft={'3'} marginTop={'3'} onClick={handleClickOnNew}>{'创建新的用户故事'}</Button>
+					<Button onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance);setShowEditStory(true);}} marginTop={'3'} colorScheme='facebook'>🪄 Generate</Button>
+					{/* <Button marginLeft={'3'} marginTop={'3'} onClick={handleClickOnNew}>{'创建新的用户故事'}</Button> */}
 				</FormControl>
 			</Flex>
 		</Card>
