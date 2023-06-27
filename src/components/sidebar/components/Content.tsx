@@ -11,11 +11,17 @@ import React from 'react';
 
 function SidebarContent(props: { routes: RoutesType[] }) {
 	const { routes } = props;
-	const {setShowGenerateForm, setShowEditStory,setShowEditTask,setShowEditTestCase,setStoryId} = React.useContext(ItemContext);
+	const {clearItem,setEditTestCase,setEditTask,setShowGenerateForm, setShowEditStory,setShowEditTask,setShowEditTestCase,setStoryId} = React.useContext(ItemContext);
 
 	const handleCreateUserStory = (e: any,) => {
-		setShowEditStory(true);
+		clearItem();
+		setShowEditStory(false);
 		setShowGenerateForm(true);
+		setShowEditTask(false);
+		setShowEditTestCase(false);
+		setStoryId(null);
+		setEditTask(0)
+		setEditTestCase('')
 	}
 
 	// SIDEBAR

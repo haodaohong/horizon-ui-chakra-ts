@@ -38,6 +38,8 @@ import {
 import { createUserStory,updateUserStory } from "services";
 import React from "react";
 import { ItemContext } from "contexts/SidebarContext";
+import Confetti from 'react-confetti';
+
 interface UserStoryResultProps {
   Result: string;
   onstoryid: any;
@@ -47,6 +49,8 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
   const { ...rest } = props;
   const { onstoryid, Result, onShowGenerateForm } = props;
   // Chakra Color Mode
+  const [confetti, setConfetti] = useState(false);
+
   const [disable, setDisable] = useState(false);
   const [btnText, setBtnText] = useState("Save");
   const [input, setInput] = useState("");
@@ -54,6 +58,11 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
 	const {storyId,setStoryId} = React.useContext(ItemContext);
   useEffect(() => {
     setResultText(props.Result);
+
+    setConfetti(true);
+    setTimeout(() => setConfetti(false), 2000); // 撒花特效持续2秒
+
+
   }, [props.Result]);
   const handleInputChange = (e: {
     target: { value: SetStateAction<string> };

@@ -34,12 +34,19 @@ import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
 } from "variables/charts";
+import Confetti from 'react-confetti';
 
 export default function UserTestCaseResult(props: any) {
   const { ...rest } = props;
   const { storyId, userStoryContent } = props;
 	const {editTestCase, setStories, setAllUserStories} = React.useContext(ItemContext);
+  const [confetti, setConfetti] = useState(false);
+  const [opacity, setOpacity] = useState(1.0);
+  const [disableGenerate, setDisableGenerate] = useState(false);
+  const [disableGenerateText, setDisableGenerateText] = useState('Generate');
 
+  const [disableSave, setDisableSave] = useState(false);
+  const [disableSaveText, setDisableSaveText] = useState('Save');
 
   // Chakra Color Mode
   const [input, setInput] = useState(editTestCase);
@@ -68,9 +75,12 @@ export default function UserTestCaseResult(props: any) {
   };
 
   const OnSave =async (data:string) => {
+    setDisableSave(true);
+    setDisableSaveText('Saving...');
     createTestCase(storyId, JSON.stringify(data)).then(e=>{
       console.log('save', e)
-
+      setDisableSave(false);
+      setDisableSaveText('Save');
       getAllUserStories().then(e => {
 				setStories(e.data);
 				setAllUserStories(e.data);
@@ -81,6 +91,8 @@ export default function UserTestCaseResult(props: any) {
   }
 
   const OnGenerateTestCase = async (id: any) => {
+    setDisableGenerate(true);
+    setDisableGenerateText('Generating...')
     const endpoint = `https://ai.api.1app.site/api/A_AITestCase/Generate?storyId=${id}`;
     const controller = new AbortController();
     const response = await fetch(endpoint, {
@@ -118,6 +130,11 @@ export default function UserTestCaseResult(props: any) {
       text += chunkValue;
       setInput(text);
     }
+    setDisableGenerate(false);
+    setDisableGenerateText('Generate');
+    setConfetti(true);
+    const intervalId = setInterval(() => {setOpacity(opacity => (opacity - 0.23) < 0 ? 0 : (opacity - 0.23))}, 1000)
+    setTimeout(() => {setConfetti(false);clearInterval(intervalId);setOpacity(1);}, 5000); // 撒花特效持续2秒
   };
 
   return (
@@ -133,12 +150,26 @@ export default function UserTestCaseResult(props: any) {
         pe="20px"
         pt="5px"
       >
-        <Text>{userStoryContent}</Text>
+        <Text style={{ whiteSpace: 'pre-wrap' }}>{userStoryContent}</Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
         <Heading m={"3"}>Test Case Result：</Heading>
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
+      { confetti && <Confetti
+        opacity={opacity}
+        drawShape={ctx => {
+          ctx.beginPath()
+          for(let i = 0; i < 22; i++) {
+            const angle = 0.35 * i
+            const x = (0.2 + (1.5 * angle)) * Math.cos(angle)
+            const y = (0.2 + (1.5 * angle)) * Math.sin(angle)
+            ctx.lineTo(x, y)
+          }
+          ctx.stroke()
+          ctx.closePath()
+        }}
+      />}
         <FormControl>
           <Textarea
             height={"350px"}
@@ -148,11 +179,11 @@ export default function UserTestCaseResult(props: any) {
             value={input}
             onChange={handleInputChange}
           />
-          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTestCase(storyId)}>
-            🤖 Generate
+          <Button disabled={disableGenerate} marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTestCase(storyId)}>
+            🤖 {disableGenerateText}
           </Button>
-          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(input)}>
-            💾 Save
+          <Button disabled={disableSave} marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(input)}>
+            💾 {disableSaveText}
           </Button>
         </FormControl>
       </Flex>

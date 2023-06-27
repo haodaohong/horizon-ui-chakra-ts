@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
+
 // Assets
 import Usa from "assets/img/dashboards/usa.png";
 // Custom components
@@ -38,16 +39,23 @@ import UserTaskResult from "./components/UserTaskResult";
 import React, { useState, useContext, useEffect } from "react";
 import { generateUserStory } from "services";
 import { ItemContext } from "contexts/SidebarContext";
+import Confetti from 'react-confetti';
+
 
 export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const [result, setResult] = useState("");
+  const [confetti, setConfetti] = useState(false);
+  const [opacity, setOpacity] = useState(1.0);
 
   const [showStoryBox, setShowStoryBox] = useState(false);
   const [showTaskBox, setShowTaskBox] = useState(false);
   const [showTestCaseBox, setShowTestCaseBox] = useState(false);
+
+  const [disableGenerate, setDisableGenerate] = useState(false);
+	const [disableGenerateText, setDisableGenerateText] = useState('Generate');
 
   const {showGenerateForm, setShowGenerateForm,showNewStory,sharedItem,storyId,setStoryId, shareItem, clearItem,showEditStory,showEditTask,showEditTestCase} = useContext(ItemContext);
 
@@ -73,6 +81,8 @@ export default function UserReports() {
     acceptance: string,
     isEnglish: string
   ) {
+    setDisableGenerate(true);
+    setDisableGenerateText('Generating...');
     setShowStoryBox(true);
     // setShowTaskBox(true);
     // setShowTestCaseBox(true);
@@ -122,6 +132,11 @@ export default function UserReports() {
       text += chunkValue;
       setResult(text);
     }
+    setDisableGenerate(false);
+    setDisableGenerateText('Generate');
+    setConfetti(true);
+    const intervalId = setInterval(() => {setOpacity(opacity => (opacity - 0.23) < 0 ? 0 : (opacity - 0.23))}, 1000)
+    setTimeout(() => {setConfetti(false);clearInterval(intervalId);setOpacity(1);}, 5000); // 撒花特效持续2秒
   }
 
   const OnStorySave = (storyId: number) => {
@@ -138,20 +153,31 @@ export default function UserReports() {
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <SimpleGrid
-        height={"100%"}
-        columns={{ base: 1, md: 1, xl: 2 }}
-        gap="20px"
-        mb="20px"
-      >
+   
         {(showGenerateForm) ? (
-          <CreateUserStory Generate={OnGenerateUserStory} />
+          <CreateUserStory Generate={OnGenerateUserStory} disableGenerate={disableGenerate} disableGenerateText={disableGenerateText}/>
         ) : (
           <></>
         )}
         {showEditStory ? (
        <> 
-       <UserStoryResult Result={result} onstoryid={OnStorySave} onShowGenerateForm={onShowGenerateForm} /></>
+     
+       <UserStoryResult Result={result} onstoryid={OnStorySave} onShowGenerateForm={onShowGenerateForm} />
+      { confetti && <Confetti
+        opacity={opacity}
+        drawShape={ctx => {
+          ctx.beginPath()
+          for(let i = 0; i < 22; i++) {
+            const angle = 0.35 * i
+            const x = (0.2 + (1.5 * angle)) * Math.cos(angle)
+            const y = (0.2 + (1.5 * angle)) * Math.sin(angle)
+            ctx.lineTo(x, y)
+          }
+          ctx.stroke()
+          ctx.closePath()
+        }}
+      />}
+    </>
         ) : (
           <></>
         )}
@@ -165,7 +191,7 @@ export default function UserReports() {
         ) : (
           <></>
         )}
-      </SimpleGrid>
+     
     </Box>
   );
 }

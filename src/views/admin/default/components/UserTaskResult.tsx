@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/card/Card";
+import CardBody from "components/card/Card";
 import LineChart from "components/charts/LineChart";
 import { SetStateAction, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
@@ -34,18 +35,25 @@ import {
 import { createUserTask, getAllUserStories } from "services";
 import React from "react";
 import { ItemContext } from "contexts/SidebarContext";
+import Confetti from 'react-confetti';
 
 export default function UserTaskResult(props: any) {
   const { ...rest } = props;
   const { storyId, userStoryContent } = props;
 	const {editTask, setStories, setAllUserStories} = React.useContext(ItemContext);
-
+  const [confetti, setConfetti] = useState(false);
+  const [opacity, setOpacity] = useState(1.0);
   // Chakra Color Mode
   const [input, setInput] = useState(editTask);
   const handleInputChange = (e: {
     target: { value: SetStateAction<string> };
   }) => setInput(e.target.value);
 
+  const [disableGenerate, setDisableGenerate] = useState(false);
+  const [disableGenerateText, setDisableGenerateText] = useState('Generate');
+
+  const [disableSave, setDisableSave] = useState(false);
+  const [disableSaveText, setDisableSaveText] = useState('Save');
 
 
   const isError = input === "";
@@ -77,7 +85,9 @@ export default function UserTaskResult(props: any) {
   }
 
   const OnGenerateTasks = async (id: number) => {
-    const endpoint = `http://ai.api.1app.site/api/A_AIUserTask/Generate?storyId=${id}`;
+    setDisableGenerate(true);
+    setDisableGenerateText('Generating...')
+    const endpoint = `https://ai.api.1app.site/api/A_AIUserTask/Generate?storyId=${id}`;
     const controller = new AbortController();
     const response = await fetch(endpoint, {
       method: "POST",
@@ -115,10 +125,16 @@ export default function UserTaskResult(props: any) {
       text += chunkValue;
       setInput(text);
     }
+    setDisableGenerate(false);
+    setDisableGenerateText('Generate');
+    setConfetti(true);
+    const intervalId = setInterval(() => {setOpacity(opacity => (opacity - 0.23) < 0 ? 0 : (opacity - 0.23))}, 1000)
+    setTimeout(() => {setConfetti(false);clearInterval(intervalId);setOpacity(1);}, 5000); // 撒花特效持续2秒
   };
 
   return (
-    <Card w="100%" mb="0px" {...rest}>
+    <Card w="100%" {...rest}>
+      <CardBody>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
         <Heading m={"3"}>Generate Task：</Heading>
       </Flex>
@@ -130,12 +146,28 @@ export default function UserTaskResult(props: any) {
         pe="20px"
         pt="5px"
       >
-        <Text>{userStoryContent}</Text>
+        <Text style={{ whiteSpace: 'pre-wrap' }}>{userStoryContent}</Text>
       </Flex>
       <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
         <Heading m={"3"}>Task Result：</Heading>
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
+        
+      { confetti && <Confetti
+        opacity={opacity}
+        drawShape={ctx => {
+          ctx.beginPath()
+          for(let i = 0; i < 22; i++) {
+            const angle = 0.35 * i
+            const x = (0.2 + (1.5 * angle)) * Math.cos(angle)
+            const y = (0.2 + (1.5 * angle)) * Math.sin(angle)
+            ctx.lineTo(x, y)
+          }
+          ctx.stroke()
+          ctx.closePath()
+        }}
+      />}
+
         <FormControl>
           <Textarea
             value={input}
@@ -145,14 +177,16 @@ export default function UserTaskResult(props: any) {
             placeholder="这里会展示生成结果..."
             onChange={handleInputChange}
           />
-          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTasks(storyId)}>
-            🤖 Generate
+
+          <Button disabled={disableGenerate} marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnGenerateTasks(storyId)}>
+            🤖 {disableGenerateText}
           </Button>
-          <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(input)}>
-            💾 Save
+          <Button disabled={disableSave} marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => OnSave(input)}>
+            💾 {disableSaveText}
           </Button>
         </FormControl>
       </Flex>
+      </CardBody>
     </Card>
   );
 }

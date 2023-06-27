@@ -13,7 +13,9 @@ import { lineChartDataTotalSpent, lineChartOptionsTotalSpent } from 'variables/c
 
 export default function GenerateUserStory(props: { [x: string]: any }) {
 	const { ...rest } = props;
-
+	const [disableGenerate, setDisableGenerate] = useState(false);
+	const [disableGenerateText, setDisableGenerateText] = useState('Generate');
+  
 	// Chakra Color Mode
 	const [who, setWho] = useState('')
 	const [whatToDo, setWhatToDo] = useState('')
@@ -38,6 +40,12 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 
 	const handleClickOnNew = () => {
 		clearItem();
+		
+	}
+
+	const handleGenerateNew = () => {
+		setDisableGenerate(true);
+		setDisableGenerateText('Generating...')
 	}
 	return (
 		<Card justifyContent='center' alignItems='center' flexDirection='column' w='100%' mb='0px' {...rest}>
@@ -60,7 +68,7 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 					{/* <Button marginLeft={'3'} marginTop={'3'} onClick={handleClickOnNew}>{'创建新的用户故事'}</Button> */}
 				</FormControl>
 			</Flex>
-					<Button onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance,isEnglish);setShowEditStory(true);}} marginTop={'3'} colorScheme='facebook'>🪄 Generate</Button>
+					<Button disabled={props.disableGenerate} onClick={()=>{if(!props.Generate){return;};props.Generate(who,whatToDo,whyToDo,acceptance,isEnglish);setShowEditStory(true);}} marginTop={'3'} colorScheme='facebook'>🪄 {props.disableGenerateText}</Button>
 			</VStack>
 		</Card>
 	);
