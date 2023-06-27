@@ -35,7 +35,7 @@ function Sidebar(props: { routes: RoutesType[]; [x: string]: any }) {
 			<Box
 				bg={sidebarBg}
 				transition={variantChange}
-				w='300px'
+				w='400px'
 				h='100vh'
 				m={sidebarMargins}
 				minH='100%'
