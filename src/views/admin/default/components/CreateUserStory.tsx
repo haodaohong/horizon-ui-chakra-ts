@@ -1,5 +1,5 @@
 // Chakra imports
-import { Box,FormErrorMessage,FormControl,FormHelperText, Button, Editable, EditablePreview, EditableTextarea, Flex, FormLabel, Icon, Input, Text, useColorModeValue, useBoolean, WrapItem, Heading, Switch, VStack } from '@chakra-ui/react';
+import { Box,FormErrorMessage,FormControl,FormHelperText, Button, Editable, EditablePreview, EditableTextarea, Flex, FormLabel, Icon, Input, Text, useColorModeValue, useBoolean, WrapItem, Heading, Switch, VStack, Textarea } from '@chakra-ui/react';
 // Custom components
 import Card from 'components/card/Card';
 import LineChart from 'components/charts/LineChart';
@@ -17,10 +17,10 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 	const [disableGenerateText, setDisableGenerateText] = useState('Generate');
   
 	// Chakra Color Mode
-	const [who, setWho] = useState('')
-	const [whatToDo, setWhatToDo] = useState('')
-	const [whyToDo, setWhyToDo] = useState('')
-	const [acceptance, setAcceptance] = useState('')
+	const [who, setWho] = useState('管理员')
+	const [whatToDo, setWhatToDo] = useState('增加一个管理员登录页面功能')
+	const [whyToDo, setWhyToDo] = useState('需要验证管理员权限登录')
+	const [acceptance, setAcceptance] = useState('管理员可以通过手机号验证登录，需要集成阿里云短信服务，用户名密码登录，以及通过手机号获取忘记密码功能')
 	const [isEnglish, setIsEnglish] = useState(false)
 	const handleWhoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWho(e.target.value)
 	const handleWhatToDoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWhatToDo(e.target.value)
@@ -62,7 +62,7 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
 					<FormLabel>Why does the user require these capabilities?</FormLabel>
 					<Input marginBottom={'5'}  value={whyToDo} onChange={handleWhyToDoInputChange} />
 					<FormLabel>What are the acceptance criteria?</FormLabel>
-					<Input marginBottom={'5'}  value={acceptance} onChange={handleAcceptanceInputChange} />
+					<Textarea marginBottom={'5'}  value={acceptance} onChange={handleAcceptanceInputChange} />
 					<FormLabel htmlFor='email-alerts'>Response in English?</FormLabel>
 					<Switch marginBottom={'5'} id='email-alerts' onChange={handleIsEnglishInputChange}/>
 					{/* <Button marginLeft={'3'} marginTop={'3'} onClick={handleClickOnNew}>{'创建新的用户故事'}</Button> */}

@@ -48,14 +48,14 @@ export default function AdminNavbar(props: {
 		<Box
 			position={navbarPosition}
 			boxShadow={navbarShadow}
-			bg={navbarBg}
+			// bg={navbarBg}
 			borderColor={navbarBorder}
 			filter={navbarFilter}
-			backdropFilter={navbarBackdrop}
+			// backdropFilter={navbarBackdrop}
 			backgroundPosition='center'
 			backgroundSize='cover'
 			borderRadius='16px'
-			borderWidth='1.5px'
+			borderWidth='0px'
 			borderStyle='solid'
 			transitionDelay='0s, 0s, 0s, 0s'
 			transitionDuration=' 0.25s, 0.25s, 0.25s, 0s'
@@ -83,7 +83,7 @@ export default function AdminNavbar(props: {
 				base: 'calc(100vw - 6%)',
 				md: 'calc(100vw - 8%)',
 				lg: 'calc(100vw - 6%)',
-				xl: 'calc(100vw - 350px)',
+				xl: 'calc(100vw - 450px)',
 				'2xl': 'calc(465px)'
 			}}>
 			<Flex
