@@ -18,9 +18,9 @@ export default function GenerateUserStory(props: { [x: string]: any }) {
   
 	// Chakra Color Mode
 	const [who, setWho] = useState('管理员')
-	const [whatToDo, setWhatToDo] = useState('增加一个管理员登录页面功能')
+	const [whatToDo, setWhatToDo] = useState('增加一个管理员登录页面功能，管理员可以通过手机登录，也可以通过用户名密码登录')
 	const [whyToDo, setWhyToDo] = useState('需要验证管理员权限登录')
-	const [acceptance, setAcceptance] = useState('管理员可以通过手机号验证登录，需要集成阿里云短信服务，用户名密码登录，以及通过手机号获取忘记密码功能')
+	const [acceptance, setAcceptance] = useState('管理员可以通过手机号验证登录，需要集成阿里云短信服务，用户名密码登录，可以获取遗忘密码')
 	const [isEnglish, setIsEnglish] = useState(false)
 	const handleWhoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWho(e.target.value)
 	const handleWhatToDoInputChange = (e: { target: { value: SetStateAction<string>; }; }) => setWhatToDo(e.target.value)
