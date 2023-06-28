@@ -129,7 +129,7 @@ export default function UserTaskResult(props: any) {
     setDisableGenerateText('Generate');
     setConfetti(true);
     const intervalId = setInterval(() => {setOpacity(opacity => (opacity - 0.23) < 0 ? 0 : (opacity - 0.23))}, 1000)
-    setTimeout(() => {setConfetti(false);clearInterval(intervalId);setOpacity(1);}, 5000); // 撒花特效持续2秒
+    setTimeout(() => {setConfetti(false);clearInterval(intervalId);setOpacity(1);}, 10000); // 撒花特效持续2秒
   };
 
   return (
@@ -152,7 +152,7 @@ export default function UserTaskResult(props: any) {
         <Heading m={"3"}>Task Result：</Heading>
       </Flex>
       <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
-        
+
       { confetti && <Confetti
         opacity={opacity}
         drawShape={ctx => {

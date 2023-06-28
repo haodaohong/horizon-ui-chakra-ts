@@ -11,6 +11,7 @@ import {
   Flex,
   FormLabel,
   VStack,
+  Stack,
   Icon,
   Input,
   Text,
@@ -35,7 +36,7 @@ import {
   lineChartDataTotalSpent,
   lineChartOptionsTotalSpent,
 } from "variables/charts";
-import { createUserStory,updateUserStory } from "services";
+import { createUserStory,updateUserStory,askQuestion } from "services";
 import React from "react";
 import { ItemContext } from "contexts/SidebarContext";
 import Confetti from 'react-confetti';
@@ -50,7 +51,11 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
   const { onstoryid, Result, onShowGenerateForm } = props;
   // Chakra Color Mode
   const [confetti, setConfetti] = useState(false);
+  const [result,setResult] = useState('');
+  const [disableGenerate,setDisableGenerate] = useState(false);
+  const [opacity,setOpacity] = useState(1)
 
+  const [showQuestion,setShowQuestion] = useState(false)
   const [disable, setDisable] = useState(false);
   const [btnText, setBtnText] = useState("Save");
   const [input, setInput] = useState("");
@@ -60,7 +65,7 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
     setResultText(props.Result);
 
     setConfetti(true);
-    setTimeout(() => setConfetti(false), 2000); // 撒花特效持续2秒
+    setTimeout(() => setConfetti(false), 10000); // 撒花特效持续2秒
 
 
   }, [props.Result]);
@@ -86,10 +91,51 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
     target: { value: SetStateAction<string> };
   }) => setResultText(e.target.value);
 
-  const handleShowGenerateForm = (e:number) => {
-    if(onShowGenerateForm){
-      onShowGenerateForm(e);
+  const handleAskQuestion = async (question:string) => {
+    const endpoint = "https://ai.api.1app.site/api/A_AIUserStory/AskQuestion";
+
+    const controller = new AbortController();
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...{
+          Authorization: `Bearer WM5ABA9E202D94C43ASW3CA6600F2BF77FWM`,
+        },
+      },
+      signal: controller.signal,
+      body: JSON.stringify(question),
+    });
+    if (!response.ok) {
+      console.error(response.statusText);
+      return;
     }
+    const data = response.body;
+    if (!data) {
+      console.error(response.statusText);
+      return;
+    }
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+    let text = "";
+    while (!done) {
+      setShowQuestion(true);
+      //   if (stopConversationRef.current === true) {
+      // 	controller.abort();
+      // 	done = true;
+      // 	break;
+      //   }
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      text += chunkValue;
+      setResult(text);
+    }
+    setDisableGenerate(false);
+    setConfetti(true);
+    const intervalId = setInterval(() => {setOpacity(opacity => (opacity - 0.23) < 0 ? 0 : (opacity - 0.23))}, 1000)
+    setTimeout(() => {setConfetti(false);clearInterval(intervalId);setOpacity(1);}, 10000); 
   }
 
   const save = () => {
@@ -148,23 +194,45 @@ const UserStoryResult: React.FC<UserStoryResultProps> = (props) => {
             placeholder="Result here..."
             onChange={handleResultInputChange}
           />
-
-
-          {/* <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => handleShowGenerateForm(storyId)}>
-            🤖 Regenerate
-          </Button> */}
         </FormControl>
       </Flex>
+      <Stack direction={['column', 'row']} spacing='24px'>
+        <Box w='240px' h='140px'>
+              <Button
+                  disabled={disable}
+                  onClick={save}
+                  marginTop={"3"}
+                  colorScheme="facebook"
+                >
+                  💾 {btnText}
+                </Button>
+        </Box>
+        <Box w='240px' h='140px'>
+          
+        <Button marginTop={"3"} marginLeft={"3"} colorScheme="facebook" onClick={() => handleAskQuestion(resultText)}>
+                  🤖 Developer Ask
+                </Button>
+        </Box>
+      </Stack>
 
-      <Button
-            disabled={disable}
-            onClick={save}
-            marginTop={"3"}
-            colorScheme="facebook"
-          >
-            💾 {btnText}
-          </Button>
       </VStack>
+      {showQuestion && <VStack w={'100%'}>
+      <Flex align="center" justify="space-between" w="100%" pe="20px" pt="5px">
+        <Heading m={"3"}>Questions：</Heading>
+      </Flex>
+      <Flex w="100%" flexDirection={{ base: "column", lg: "row" }}>
+        <FormControl>
+
+          <Textarea
+            value={result}
+            height={"350px"}
+            size="lg"
+            marginBottom={"3"}
+            placeholder="Result here..."
+          />
+        </FormControl>
+      </Flex>
+      </VStack>}
     </Card>
   );
 }

@@ -104,6 +104,14 @@ export const updateUserTask = async (storyId:number,data:string) => {
   }
 };
 
+export const askQuestion =async (data:string) => {
+  try {
+    return await api.post<UserTask>('/A_AIUserStory/AskQuestion',data);
+  } catch (error) {
+    console.error('Error create data:', error);
+  }
+}
+
 export const updateTestCase = async (storyId:number,data:string) => {
   try {
       return await api.post<TestCase>('/A_AITestCase/UpdateById?storyId='+storyId,data);
